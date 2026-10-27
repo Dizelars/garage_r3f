@@ -15,60 +15,15 @@
     <link rel="manifest" href="https://garage-codd.ru/favicons/site.webmanifest">
     <link rel="mask-icon" href="https://garage-codd.ru/favicons/safari-pinned-tab.svg" color="#5bbad5">
     <style>
-      @font-face {
-        font-family: "MoscowSans";
-        src: url("fonts/MoscowSans-Light.woff2") format("woff2"),
-            url("fonts/MoscowSans-Light.woff") format("woff"), 
-            url("fonts/MoscowSans-Light.otf") format("otf"), 
-            url("fonts/MoscowSans-Light.ttf") format("ttf");
-        font-weight: 300;
-        font-style: normal;
-        font-display: swap;
-      }
       
-      @font-face {
-        font-family: "MoscowSans";
-        src: url("fonts/MoscowSans-Regular.woff2") format("woff2"), 
-            url("fonts/MoscowSans-Regular.woff") format("woff"), 
-            url("fonts/MoscowSansRegular.otf") format("otf"), 
-            url("fonts/MoscowSansRegular.ttf") format("ttf");
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
-      }
       
-      @font-face {
-        font-family: "MoscowSans";
-        src: url("fonts/MoscowSans-Medium.woff2") format("woff2"), 
-            url("fonts/MoscowSans-Medium.woff") format("woff"), 
-            url("fonts/MoscowSansMedium.otf") format("otf"), 
-            url("fonts/MoscowSansMedium.ttf") format("ttf");
-        font-weight: 500;
-        font-style: normal;
-        font-display: swap;
-      }
       
-      @font-face {
-        font-family: "MoscowSans";
-        src: url("fonts/MoscowSans-Bold.woff2") format("woff2"), 
-            url("fonts/MoscowSans-Bold.woff") format("woff"), 
-            url("fonts/MoscowSansBold.otf") format("otf"), 
-            url("fonts/MoscowSansBold.ttf") format("ttf");
-        font-weight: 700;
-        font-style: normal;
-        font-display: swap;
-      }
       
-      @font-face {
-        font-family: 'MoscowSans';
-        src: url("fonts/MoscowSansExtraBold.woff2") format("woff2"), 
-            url("fonts/MoscowSansExtraBold.woff") format("woff"), 
-            url("fonts/MoscowSansExtraBold.otf") format("otf"), 
-            url("fonts/MoscowSansExtraBold.ttf") format("ttf");
-        font-weight: 800;
-        font-style: normal;
-        font-display: swap;
-      }
+      
+      
+      
+      
+      
 
       * {
           -webkit-box-sizing: border-box;
@@ -248,105 +203,8 @@
     <title>AR</title>
   </head>
   <body>
-    <script src="./libraries/lottie/lottie.js" type="module"></script>
-
-    <div id="div_mv"></div>
-
-    <div class="link_to_page">
-      <a>На страницу с моделью</a>
-    </div>
-
-    <div class="AR_loading">
-      <div class="AR_loading_wrapper">
-        <p class="text">Подготавливаем показ модели в дополненной реальности</p>
-        <dotlottie-player class="lottie" src="./assets/js/lottie.json" background="transparent" speed="1" style="width: 150px;" loop autoplay preload></dotlottie-player>
-      </div>
-    </div>
-
-    <div class="model_picture">
-      <img alt="Транспортное средство ЦОДД" fetchpriority="high">
-      <div class="gradient gradient_left"></div>
-      <div class="gradient gradient_right"></div>
-    </div>
-
-    <script type="module" src="./libraries/model-viewer.js"></script>
-    <script type="module">
-      const urlParams = new URLSearchParams(window.location.search);
-      const newsId = urlParams.get("armodel");
-
-      const arModelUrls = {
-          moto: 'moto/moto.gltf',
-          pickup: 'pickup/untitled.gltf',
-          bus: 'bus/bus.gltf',
-          ford: 'ford/ford.gltf',
-          kamaz: 'kamaz/kamaz.gltf',
-          kater: 'kater/kater.gltf',
-          moskvich: 'moskvich/moskvich.gltf',
-          velo: 'velo/bicycle.gltf',
-          solaris: 'solaris/solaris.gltf'
-      };
-      
-      const pageModelUrls = {
-          moto: 'moto.html',
-          pickup: 'pickup.html',
-          bus: 'bus.html',
-          ford: 'ford.html',
-          kamaz: 'kamaz.html',
-          kater: 'kater.html',
-          moskvich: 'moskvich.html',
-          velo: 'velo.html',
-          solaris: 'solaris.html'
-      };
-
-      const photoModelUrls = {
-          moto: 'media/images/modelPage/slider/moto.png',
-          pickup: 'media/images/modelPage/slider/pickup.png',
-          bus: 'media/images/modelPage/slider/bus.png',
-          ford: 'media/images/modelPage/slider/ford.png',
-          kamaz: 'media/images/modelPage/slider/kamaz.png',
-          kater: 'media/images/modelPage/slider/kater.png',
-          moskvich: 'media/images/modelPage/slider/moskvich.png',
-          velo: 'media/images/modelPage/slider/velo.png',
-          solaris: 'media/images/modelPage/slider/solaris_gray.png'
-      };
-
-      let arModelUrl = arModelUrls[newsId];
-      let pageModelUrl = pageModelUrls[newsId];
-      let photoModelUrl = photoModelUrls[newsId];
-
-      document.addEventListener("DOMContentLoaded", () => {
-          const linkToPage = document.querySelector('.link_to_page a');
-          const modelPicture = document.querySelector('.model_picture img');
-          const ARLoading = document.querySelector('.AR_loading');
-          const videoPrew = document.querySelector('.video_container');
-
-          const m_viewer = document.createElement('model-viewer');
-          m_viewer.setAttribute('class', 'google_viewer');
-          m_viewer.setAttribute('ar', 'true');
-          m_viewer.setAttribute('ar-placement', 'floor');
-          m_viewer.setAttribute('ar-modes', 'scene-viewer webxr quick-look');
-          m_viewer.setAttribute('camera-controls', '');
-          if (arModelUrl) {
-            m_viewer.setAttribute('src', `https://garage-codd.ru/models/${arModelUrl}`);
-            // m_viewer.setAttribute('src', `https://garagetest.ru/models/${arModelUrl}`);
-          }
-
-          document.getElementById('div_mv').appendChild(m_viewer);
-          setTimeout(() => {
-              m_viewer.activateAR();
-              setTimeout(() => {
-                ARLoading.classList.add('AR_opened');
-              }, 15000);
-          }, 100);
-
-          if (pageModelUrl) {
-            linkToPage.setAttribute('href', `${pageModelUrl}`);
-          };
-
-          if (photoModelUrl) {
-            modelPicture.setAttribute('src', `${photoModelUrl}`);
-          };
-      });
-     </script>
-  </body>
+    
+    <div id="root"></div>
+    <script type="module" src="./entries/pageARLarge.tsx"></script>
+</body>
 </html>

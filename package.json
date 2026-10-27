@@ -8,22 +8,26 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "@types/three": "^0.186.0",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "@types/three": "^0.183.1",
+    "@vitejs/plugin-react": "^6.1.2",
     "autoprefixer": "^10.6.1",
     "postcss": "^8.5.30",
+    "typescript": "^5.9.3",
     "vite": "^8.3.4",
-    "vite-plugin-html": "^3.2.2",
     "vite-plugin-html-minifier-terser": "^3.8.0"
   },
   "dependencies": {
-    "@gltf-transform/core": "^4.5.1",
-    "@gltf-transform/extensions": "^4.5.1",
-    "@gltf-transform/functions": "^4.5.1",
-    "@monogrid/gainmap-js": "^3.4.0",
-    "aframe": "^1.6.0",
-    "lil-gui": "^0.21.0",
+    "@google/model-viewer": "^4.4.0",
+    "@monogrid/gainmap-js": "^3.6.0",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.2",
+    "aframe": "^1.8.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "reset-css": "^5.0.2",
-    "stats.js": "^0.17.0",
-    "three": "^0.163.0"
+    "swiper": "^11.2.10",
+    "three": "^0.183.2"
   }
 }

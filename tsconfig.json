@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUncheckedSideEffectImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "pages/*": ["src/pages/*"],
+      "entities/*": ["src/entities/*"],
+      "features/*": ["src/features/*"],
+      "shared/*": ["src/shared/*"],
+      "style/*": ["src/style/*"],
+      "swiper/css": ["src/types/css-side-effect.d.ts"],
+      "swiper/css/*": ["src/types/css-side-effect.d.ts"]
+    }
+  },
+  "include": ["src"]
+}
