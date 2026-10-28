@@ -157,24 +157,6 @@ export function ModelPage({ page }: ModelPageProps) {
       setSliderHidden((value) => !value);
       setInteriorOpen(opening);
       setTransitioning(false);
-      const scene = document.querySelector("a-scene") as (HTMLElement & {
-        play: () => void;
-        pause: () => void;
-      }) | null;
-      if (!scene) {
-        return;
-      }
-      scene.style.opacity = opening ? "1" : "0";
-      scene.style.height = opening ? "auto" : "0";
-      scene.style.pointerEvents = opening ? "auto" : "none";
-      if (opening) {
-        scene.play();
-      } else {
-        scene.pause();
-      }
-      document.querySelectorAll<HTMLElement>(".point").forEach((point) => {
-        point.style.zIndex = opening ? "0" : "1";
-      });
     }, 1500);
   };
 
@@ -224,7 +206,7 @@ export function ModelPage({ page }: ModelPageProps) {
       />
       <div id="overlay" className={overlayActive ? "active" : undefined} />
       <ArButton arSrc={page.arSrc} qrSrc={page.qrSrc} />
-      {page.panoramaHtml ? <Panorama markup={page.panoramaHtml} /> : null}
+      {page.panorama ? <Panorama tour={page.panorama} active={interiorOpen} /> : null}
     </>
   );
 }
