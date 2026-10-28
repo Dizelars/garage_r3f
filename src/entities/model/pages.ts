@@ -1,5 +1,6 @@
 import type { ModelPageData } from "entities/model/types";
 import { pageContent } from "entities/model/pageContent";
+import { panoramaTours } from "entities/model/panoramas";
 import { sceneConfigs } from "entities/model/scenes";
 
 export const modelIds = ["moto", "pickup", "bus", "kamaz", "kater", "moskvich", "velo"] as const;
@@ -12,7 +13,7 @@ function createPage(id: ModelId): ModelPageData {
   if (!content || !scene) {
     throw new Error(`Нет данных страницы ${id}`);
   }
-  return { id, ...content, scene };
+  return { id, ...content, scene, panorama: panoramaTours[id] ?? null };
 }
 
 export const pages = {

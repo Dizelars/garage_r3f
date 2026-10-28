@@ -81,14 +81,79 @@ html.a-fullscreen body {
     width: 100%;
 }
 
-a-scene {
+.panorama-scene {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
     opacity: 0;
     height: 0;
+    overflow: hidden;
     pointer-events: none;
 }
 
-.a-enter-vr.fullscreen .a-enter-vr-button {
-    display: none !important;
+.panorama-scene.active {
+    opacity: 1;
+    height: 100%;
+    pointer-events: auto;
+}
+
+.panorama-fade {
+    position: absolute;
+    inset: 0;
+    background: #000000;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.panorama-dialog {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    border: 1px solid #ffffff;
+    border-radius: 12px;
+    background: #090909;
+    padding: 18px;
+    max-width: 350px;
+    width: calc(100% - 40px);
+}
+
+.panorama-dialog__text {
+    margin: 0 0 20px;
+    color: #ffffff;
+    font-family: "MoscowSans", sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 22px;
+}
+
+.panorama-dialog__actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.panorama-dialog__allow,
+.panorama-dialog__deny {
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: "MoscowSans", sans-serif;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 22px;
+    cursor: pointer;
+}
+
+.panorama-dialog__allow {
+    background-color: #ffffff;
+    color: #090909;
+}
+
+.panorama-dialog__deny {
+    background-color: #090909;
+    color: #ffffff;
 }
 
 .threeJSScene {
@@ -529,7 +594,7 @@ a-scene {
     -webkit-backdrop-filter: blur(6px);
     padding-top: 16px;
     cursor: pointer;
-    z-index: 1;
+    z-index: 6;
 }
 
 .tech_spec__interior .tech_spec__interior-title {

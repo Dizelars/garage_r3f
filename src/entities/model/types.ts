@@ -64,6 +64,24 @@ export type InteriorContent = {
   exitLabel: string;
 };
 
+export type PanoramaSpot = {
+  toRoom: string;
+  position: Vec3;
+  phiStart: number;
+};
+
+export type PanoramaRoom = {
+  id: string;
+  src: string;
+  phiStart: number;
+  spots: PanoramaSpot[];
+};
+
+export type PanoramaTour = {
+  rooms: PanoramaRoom[];
+  initialRoom: string;
+};
+
 export type PageContent = {
   backHref: string;
   title: string;
@@ -73,10 +91,10 @@ export type PageContent = {
   interior: InteriorContent | null;
   qrSrc: string;
   arSrc: string;
-  panoramaHtml: string | null;
 };
 
 export type ModelPageData = PageContent & {
   id: string;
   scene: SceneConfig;
+  panorama: PanoramaTour | null;
 };

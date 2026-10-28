@@ -23,7 +23,6 @@
     "@monogrid/gainmap-js": "^3.6.0",
     "@react-three/drei": "^10.7.9",
     "@react-three/fiber": "^9.8.2",
-    "aframe": "^1.8.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "reset-css": "^5.0.2",
