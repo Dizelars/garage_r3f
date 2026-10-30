@@ -26,7 +26,7 @@ const garageSky = {
   environmentIntensity: 1,
   toneMappingExposure: 1.4,
   bloomEnabled: true,
-  glow: 0.1,
+  glow: 0.01,
   draco,
   reflection: null,
 } as const;
@@ -51,6 +51,14 @@ export const sceneConfigs: Record<string, SceneConfig> = {
     modelRotationY: 0,
     minDistance: 2.5,
     floor: floor(4, 8, [1.1, 1.1]),
+    interestPoints: [
+      {
+        id: "сases",
+        title: "Кофры",
+        description: "Ремонтный комплект для велосипеда и Аптечка",
+        position: [0, 0.38, -0.23],
+      },
+    ],
   },
   bus: {
     ...garageSky,
@@ -60,6 +68,32 @@ export const sceneConfigs: Record<string, SceneConfig> = {
     modelRotationY: 0,
     minDistance: 4.5,
     floor: floor(4, 14, [0.5, 0.5]),
+    interestPoints: [
+      {
+        id: "сamera_extension",
+        title: "Камера на задней пристройке",
+        description: "Цифровая телескопическая система",
+        position: [0.2, 0.42, -1.28],
+      },
+      {
+        id: "television_inspection_cameras",
+        title: "Камеры по периметру",
+        description: "Камеры телеобзора",
+        position: [0.26, 0.55, 0],
+      },
+      {
+        id: "thermal_camera",
+        title: "Камера над лобовым",
+        description: "Тепловизор",
+        position: [0.1, 0.53, 0.93],
+      },
+      {
+        id: "telecommunications_equipment",
+        title: "Телекоммуникационное оборудование",
+        description: "Комплекс аппаратных средств и сетевых систем, который обеспечивает сбор, передачу и обработку информации с улиц города в единый ситуационный центр",
+        position: [0.06, 0.61, 0.45],
+      },
+    ],
   },
   moskvich: {
     ...garageSky,
@@ -82,34 +116,22 @@ export const sceneConfigs: Record<string, SceneConfig> = {
     animated: true,
     interestPoints: [
       {
-        id: "lightbar",
-        title: "Световая балка",
-        description: "Проблесковая балка на крыше. Кнопка «Анимация» включает цикл вспышек.",
-        position: [0.04, 2.15, 0.22],
+        id: "roof_screen",
+        title: "Экран на крыше",
+        description: "Табло отображение информации",
+        position: [0, 0.68, 0.73],
       },
       {
-        id: "front-strobes",
-        title: "Передние модули",
-        description: "Проблесковые модули над кабиной. Загораются своими кадрами того же цикла.",
-        position: [0.04, 2.15, 1.95],
+        id: "winch",
+        title: "Лебедка",
+        description: "Тяговое устройство, предназначенное для самостоятельного вытаскивания застрявшего автомобиля и буксировки техники",
+        position: [-0.06, 0.19, -0.89],
       },
       {
-        id: "rear-strobes",
-        title: "Задние секции",
-        description: "Задние проблесковые секции. Нужны, чтобы обозначить патруль сзади.",
-        position: [0.04, 1.05, -2.75],
-      },
-      {
-        id: "cabin",
-        title: "Кабина",
-        description: "Место экипажа: регулировка движения на сложных участках и оформление европротокола.",
-        position: [1.15, 1.35, 0.9],
-      },
-      {
-        id: "bed",
-        title: "Кузов",
-        description: "Отсек с экипировкой: огнетушитель, аптечка, трос, домкрат и дорожные конусы.",
-        position: [-1.15, 1.2, -0.6],
+        id: "flashing_beacons",
+        title: "Проблесковые маячки",
+        description: "Служит для предупреждения других участников движения об опасности и обозначения дорожных или коммунальных работ",
+        position: [-0.02, 0.65, 0.07],
       },
     ],
   },
@@ -140,5 +162,13 @@ export const sceneConfigs: Record<string, SceneConfig> = {
       strength: 0.2,
       scale: 0.3,
     },
+    interestPoints: [
+      {
+        id: "audible_warn_system",
+        title: "Сигнальная громкоговорящая установка",
+        description: "Подача звуковых и световых сигналов для привлечения внимания других судов, катеров, гидроциклов и пловцов",
+        position: [0.02, 0.86, -0.08],
+      },
+    ],
   },
 };

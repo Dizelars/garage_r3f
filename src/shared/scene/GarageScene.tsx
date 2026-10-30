@@ -1,15 +1,25 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { ACESFilmicToneMapping } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { SceneConfig } from "entities/model/types";
-import { getCameraSettings } from "shared/scene/camera";
-import { Bloom } from "shared/scene/Bloom";
-import { ConcreteFloor } from "shared/scene/ConcreteFloor";
-import { DockReflection } from "shared/scene/DockReflection";
-import { GainmapEnvironment } from "shared/scene/GainmapEnvironment";
-import { VehicleModel } from "shared/scene/VehicleModel";
+import { getCameraSettings } from "./camera";
+import { Bloom } from "./Bloom";
+import { ConcreteFloor } from "./ConcreteFloor";
+import { DockReflection } from "./DockReflection";
+import { GainmapEnvironment } from "./GainmapEnvironment";
+import { VehicleModel } from "./VehicleModel";
+import { PointPlacerPanel } from "./PointPlacer";
+import {
+  fromInterestPoints,
+  readPlacedPoints,
+  writePlacedPoints,
+  type PlacedPoint,
+  type PointFieldPatch,
+  type PointHover,
+  type Vec3,
+} from "./pointDraft";
 
 type GarageSceneProps = {
   config: SceneConfig;
@@ -35,8 +45,52 @@ function ResponsiveDistance({ minDistance }: { minDistance: number }) {
 
 export function GarageScene({ config, interiorOpen, sceneScaled, animationPlaying }: GarageSceneProps) {
   const initialCamera = getCameraSettings(window.innerWidth);
+  const [placing, setPlacing] = useState(false);
+  const [drafts, setDrafts] = useState<PlacedPoint[]>(() => (
+    import.meta.env.DEV ? readPlacedPoints(config.modelUrl) : []
+  ));
+  const [hover, setHover] = useState<PointHover | null>(null);
+  const [editingKey, setEditingKey] = useState<string | null>(null);
+  const loadedUrl = useRef(config.modelUrl);
+  const placingActive = import.meta.env.DEV && placing && !interiorOpen;
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) {
+      return;
+    }
+    if (loadedUrl.current !== config.modelUrl) {
+      loadedUrl.current = config.modelUrl;
+      setDrafts(readPlacedPoints(config.modelUrl));
+      setPlacing(false);
+      setHover(null);
+      setEditingKey(null);
+      return;
+    }
+    writePlacedPoints(config.modelUrl, drafts);
+  }, [config.modelUrl, drafts]);
+
+  const placePoint = (point: PlacedPoint) => {
+    setDrafts((current) => [...current, point]);
+  };
+
+  const updatePoint = (key: string, patch: PointFieldPatch) => {
+    setDrafts((current) => current.map((point) => (
+      point.key === key ? { ...point, ...patch } : point
+    )));
+  };
+
+  const retargetPoint = (key: string, position: Vec3) => {
+    setDrafts((current) => current.map((point) => (
+      point.key === key ? { ...point, position } : point
+    )));
+  };
+
+  const removePoint = (key: string) => {
+    setDrafts((current) => current.filter((point) => point.key !== key));
+  };
 
   return (
+    <>
     <Canvas
       id="webgl"
       className={sceneScaled ? "threeJSScene active" : "threeJSScene"}
@@ -90,9 +144,34 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
           config={config}
           animationPlaying={animationPlaying}
           showInterestPoints={!interiorOpen}
+          placing={placingActive}
+          drafts={drafts}
+          editingKey={editingKey}
+          onPlace={placePoint}
+          onRetarget={retargetPoint}
+          onHover={setHover}
         />
       </Suspense>
       {config.bloomEnabled && config.glow > 0 ? <Bloom glow={config.glow} /> : null}
     </Canvas>
+    {import.meta.env.DEV ? (
+      <PointPlacerPanel
+        active={placingActive}
+        label="Точки"
+        hint="Короткий клик ставит точку. У раскрытой точки клик по модели заменяет координаты. Протяжка только крутит камеру."
+        points={drafts}
+        hover={hover}
+        onToggle={() => {
+          setPlacing((value) => !value);
+          setHover(null);
+        }}
+        onUpdate={updatePoint}
+        onRemove={removePoint}
+        onClear={() => setDrafts([])}
+        onEditingChange={setEditingKey}
+        onLoadCurrent={() => setDrafts(fromInterestPoints(config.interestPoints ?? []))}
+      />
+    ) : null}
+    </>
   );
 }
