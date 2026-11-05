@@ -106,34 +106,34 @@ export const sceneConfigs: Record<string, SceneConfig> = {
   },
   pickup: {
     ...garageSky,
-    modelUrl: "models/pickup/untitled.gltf",
-    modelScale: 3,
+    modelUrl: "models/pickup_animated/untitled.gltf",
+    modelScale: 1.2,
     modelPosition: [0, 0, 0],
     modelRotationY: Math.PI,
     skyResolution: 32,
-    minDistance: 4,
+    minDistance: 2,
     floor: floor(6, 12, [0.5, 0.5]),
-    animated: true,
-    interestPoints: [
-      {
-        id: "roof_screen",
-        title: "Экран на крыше",
-        description: "Табло отображение информации",
-        position: [0, 0.68, 0.73],
-      },
-      {
-        id: "winch",
-        title: "Лебедка",
-        description: "Тяговое устройство, предназначенное для самостоятельного вытаскивания застрявшего автомобиля и буксировки техники",
-        position: [-0.06, 0.19, -0.89],
-      },
-      {
-        id: "flashing_beacons",
-        title: "Проблесковые маячки",
-        description: "Служит для предупреждения других участников движения об опасности и обозначения дорожных или коммунальных работ",
-        position: [-0.02, 0.65, 0.07],
-      },
-    ],
+    animated: false,
+    // interestPoints: [
+    //   {
+    //     id: "roof_screen",
+    //     title: "Экран на крыше",
+    //     description: "Табло отображение информации",
+    //     position: [0, 0.68, 0.73],
+    //   },
+    //   {
+    //     id: "winch",
+    //     title: "Лебедка",
+    //     description: "Тяговое устройство, предназначенное для самостоятельного вытаскивания застрявшего автомобиля и буксировки техники",
+    //     position: [-0.06, 0.19, -0.89],
+    //   },
+    //   {
+    //     id: "flashing_beacons",
+    //     title: "Проблесковые маячки",
+    //     description: "Служит для предупреждения других участников движения об опасности и обозначения дорожных или коммунальных работ",
+    //     position: [-0.02, 0.65, 0.07],
+    //   },
+    // ],
   },
   kamaz: {
     ...garageSky,

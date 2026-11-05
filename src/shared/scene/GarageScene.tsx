@@ -6,9 +6,10 @@ import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { SceneConfig } from "entities/model/types";
 import { getCameraSettings } from "./camera";
 import { Bloom } from "./Bloom";
-import { ConcreteFloor } from "./ConcreteFloor";
-import { DockReflection } from "./DockReflection";
+// import { ConcreteFloor } from "./ConcreteFloor";
+// import { DockReflection } from "./DockReflection";
 import { GainmapEnvironment } from "./GainmapEnvironment";
+import { GarageRoom } from "./GarageRoom";
 import { VehicleModel } from "./VehicleModel";
 import { PointPlacerPanel } from "./PointPlacer";
 import {
@@ -26,6 +27,7 @@ type GarageSceneProps = {
   interiorOpen: boolean;
   sceneScaled: boolean;
   animationPlaying: boolean;
+  lightsOn: boolean;
 };
 
 function ResponsiveDistance({ minDistance }: { minDistance: number }) {
@@ -43,7 +45,7 @@ function ResponsiveDistance({ minDistance }: { minDistance: number }) {
   return null;
 }
 
-export function GarageScene({ config, interiorOpen, sceneScaled, animationPlaying }: GarageSceneProps) {
+export function GarageScene({ config, interiorOpen, sceneScaled, animationPlaying, lightsOn }: GarageSceneProps) {
   const initialCamera = getCameraSettings(window.innerWidth);
   const [placing, setPlacing] = useState(false);
   const [drafts, setDrafts] = useState<PlacedPoint[]>(() => (
@@ -122,24 +124,26 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
       <OrbitControls
         makeDefault
         target={[0, 0.75, 0]}
-        maxPolarAngle={Math.PI * 0.5}
+        minPolarAngle={Math.PI * 0.4}
+        maxPolarAngle={Math.PI * 0.55}
         minDistance={config.minDistance}
         maxDistance={initialCamera.maxDistance}
         enableDamping
-        enablePan={false}
+        // enablePan={false}
         enabled={!interiorOpen}
       />
       <ResponsiveDistance minDistance={config.minDistance} />
-      {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
-      {config.reflection ? <DockReflection reflection={config.reflection} /> : null}
-      <GainmapEnvironment
+      {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
+      {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
+      {/* <GainmapEnvironment
         url={config.environment}
         skyHeight={config.skyHeight}
         skyRadius={config.skyRadius}
         skyResolution={config.skyResolution}
         intensity={config.environmentIntensity}
-      />
+      /> */}
       <Suspense fallback={null}>
+        <GarageRoom lightsOn={lightsOn} />
         <VehicleModel
           config={config}
           animationPlaying={animationPlaying}
