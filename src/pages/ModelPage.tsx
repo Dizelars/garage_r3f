@@ -85,7 +85,7 @@ export function ModelPage({ page }: ModelPageProps) {
 
       const insideSpecs = Boolean(target.closest(".tech_spec"));
       const insidePark = Boolean(target.closest(".auto_park_wrapper"));
-      const insideSceneUi = Boolean(target.closest(".scene-animation, .scene-lights, .interest-point, .point-placer"));
+      const insideSceneUi = Boolean(target.closest(".scene-animation, .scene-lights, .interest-point, .point-placer, #leva__root"));
       const width = window.innerWidth;
 
       if ((!insideSpecs && !insideSceneUi) || (width <= 1200 && insideSpecs)) {

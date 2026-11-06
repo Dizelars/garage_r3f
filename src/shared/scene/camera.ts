@@ -10,5 +10,5 @@ export function getCameraSettings(width: number): {
     return { position: [3.2, 2.3, 5.6], maxDistance: 8 };
   }
 
-  return { position: [2.5, 2, 4.5], maxDistance: 2.8 };
+  return { position: [1.112, 0.823, 2.268], maxDistance: 2.8 };
 }

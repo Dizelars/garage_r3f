@@ -4,6 +4,7 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { LoopRepeat, Mesh, MeshStandardMaterial, type AnimationClip, type Object3D } from "three";
 import type { SceneConfig } from "entities/model/types";
 import { InterestPoints } from "shared/scene/InterestPoints";
+import { VehicleDebug } from "./debug/VehicleDebug";
 import { PointPlacer } from "./PointPlacer";
 import { visibleInterestPoints, type PlacedPoint, type PointHover, type Vec3 } from "./pointDraft";
 import { collectStrobeFrames, showStrobeFrame } from "shared/scene/strobeFrames";
@@ -146,6 +147,7 @@ export function VehicleModel({
       >
         {points && points.length > 0 ? <InterestPoints points={points} occluder={model} /> : null}
       </PointPlacer>
+      {import.meta.env.DEV ? <VehicleDebug object={model} config={config} /> : null}
     </>
   );
 }

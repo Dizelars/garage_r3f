@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { Leva } from "leva";
 import { ACESFilmicToneMapping } from "three";
 import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { SceneConfig } from "entities/model/types";
@@ -12,6 +13,8 @@ import { GainmapEnvironment } from "./GainmapEnvironment";
 import { GarageRoom } from "./GarageRoom";
 import { VehicleModel } from "./VehicleModel";
 import { PointPlacerPanel } from "./PointPlacer";
+import { CameraDebug } from "./debug/CameraDebug";
+import { sceneControls } from "./sceneControls";
 import {
   fromInterestPoints,
   readPlacedPoints,
@@ -122,17 +125,21 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
       }}
     >
       <OrbitControls
-        makeDefault
-        target={[0, 0.75, 0]}
-        minPolarAngle={Math.PI * 0.4}
-        maxPolarAngle={Math.PI * 0.55}
-        minDistance={config.minDistance}
-        maxDistance={initialCamera.maxDistance}
+        ref={(controls) => {
+          sceneControls.current = controls;
+        }}
+        // makeDefault
+        // target={[0, 0.75, 0]}
+        // minPolarAngle={Math.PI * 0.4}
+        // maxPolarAngle={Math.PI * 0.55}
+        // minDistance={config.minDistance}
+        // maxDistance={initialCamera.maxDistance}
         enableDamping
         // enablePan={false}
         enabled={!interiorOpen}
       />
       <ResponsiveDistance minDistance={config.minDistance} />
+      {import.meta.env.DEV ? <CameraDebug /> : null}
       {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
       {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
       {/* <GainmapEnvironment
@@ -158,6 +165,11 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
       </Suspense>
       {config.bloomEnabled && config.glow > 0 ? <Bloom glow={config.glow} /> : null}
     </Canvas>
+    {import.meta.env.DEV ? (
+      <Leva
+        titleBar={{ title: "Сцена", drag: true, filter: true }}
+      />
+    ) : null}
     {import.meta.env.DEV ? (
       <PointPlacerPanel
         active={placingActive}
