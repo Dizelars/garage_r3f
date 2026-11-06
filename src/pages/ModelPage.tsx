@@ -8,6 +8,7 @@ import { SceneProgress } from "features/loader/SceneProgress";
 import { Panorama } from "features/panorama/Panorama";
 import { InteriorButton, TechSpec } from "features/specs/TechSpec";
 import { AnimationButton } from "features/scene/AnimationButton";
+import { LightButton } from "features/scene/LightButton";
 import { GarageScene } from "shared/scene/GarageScene";
 
 const interiorClassById: Record<string, string> = {
@@ -46,6 +47,7 @@ export function ModelPage({ page }: ModelPageProps) {
   const [transitioning, setTransitioning] = useState(false);
   const [interiorLabel, setInteriorLabel] = useState(page.interior?.enterLabel ?? "");
   const [animationPlaying, setAnimationPlaying] = useState(false);
+  const [lightsOn, setLightsOn] = useState(true);
   const [interiorClassOn, setInteriorClassOn] = useState(false);
   const [activeSlide, setActiveSlide] = useState(() => {
     const index = page.gallery.findIndex((slide) => slide.active);
@@ -83,7 +85,7 @@ export function ModelPage({ page }: ModelPageProps) {
 
       const insideSpecs = Boolean(target.closest(".tech_spec"));
       const insidePark = Boolean(target.closest(".auto_park_wrapper"));
-      const insideSceneUi = Boolean(target.closest(".scene-animation, .interest-point"));
+      const insideSceneUi = Boolean(target.closest(".scene-animation, .scene-lights, .interest-point, .point-placer, #leva__root"));
       const width = window.innerWidth;
 
       if ((!insideSpecs && !insideSceneUi) || (width <= 1200 && insideSpecs)) {
@@ -198,11 +200,17 @@ export function ModelPage({ page }: ModelPageProps) {
           onClick={() => setAnimationPlaying((value) => !value)}
         />
       ) : null}
+      <LightButton
+        enabled={lightsOn}
+        hidden={chromeHidden}
+        onClick={() => setLightsOn((value) => !value)}
+      />
       <GarageScene
         config={page.scene}
         interiorOpen={interiorOpen}
         sceneScaled={sceneScaled}
         animationPlaying={animationPlaying && !interiorOpen}
+        lightsOn={lightsOn}
       />
       <div id="overlay" className={overlayActive ? "active" : undefined} />
       <ArButton arSrc={page.arSrc} qrSrc={page.qrSrc} />

@@ -50,22 +50,22 @@ export function GainmapEnvironment({
       scene.environment = texture;
       scene.environmentIntensity = intensity;
 
-      skybox = new GroundedSkybox(texture, skyHeight, skyRadius, skyResolution);
-      skybox.position.y = skyHeight - 0.01;
-      scene.add(skybox);
+      // skybox = new GroundedSkybox(texture, skyHeight, skyRadius, skyResolution);
+      // skybox.position.y = skyHeight - 0.01;
+      // scene.add(skybox);
     });
 
     return () => {
       disposed = true;
-      if (skybox) {
-        scene.remove(skybox);
-        skybox.geometry.dispose();
-        if (Array.isArray(skybox.material)) {
-          skybox.material.forEach((material) => material.dispose());
-        } else {
-          skybox.material.dispose();
-        }
-      }
+      // if (skybox) {
+      //   scene.remove(skybox);
+      //   skybox.geometry.dispose();
+      //   if (Array.isArray(skybox.material)) {
+      //     skybox.material.forEach((material) => material.dispose());
+      //   } else {
+      //     skybox.material.dispose();
+      //   }
+      // }
       if (scene.environment === result?.renderTarget.texture) {
         scene.environment = null;
       }

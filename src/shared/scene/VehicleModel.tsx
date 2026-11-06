@@ -4,6 +4,9 @@ import { useAnimations, useGLTF } from "@react-three/drei";
 import { LoopRepeat, Mesh, MeshStandardMaterial, type AnimationClip, type Object3D } from "three";
 import type { SceneConfig } from "entities/model/types";
 import { InterestPoints } from "shared/scene/InterestPoints";
+import { VehicleDebug } from "./debug/VehicleDebug";
+import { PointPlacer } from "./PointPlacer";
+import { visibleInterestPoints, type PlacedPoint, type PointHover, type Vec3 } from "./pointDraft";
 import { collectStrobeFrames, showStrobeFrame } from "shared/scene/strobeFrames";
 
 const strobeStepSeconds = 0.18;
@@ -12,6 +15,12 @@ type VehicleModelProps = {
   config: SceneConfig;
   animationPlaying: boolean;
   showInterestPoints: boolean;
+  placing: boolean;
+  drafts: PlacedPoint[];
+  editingKey: string | null;
+  onPlace: (point: PlacedPoint) => void;
+  onRetarget: (key: string, position: Vec3) => void;
+  onHover: (hover: PointHover | null) => void;
 };
 
 function ClipPlayer({
@@ -44,7 +53,17 @@ function ClipPlayer({
   return null;
 }
 
-export function VehicleModel({ config, animationPlaying, showInterestPoints }: VehicleModelProps) {
+export function VehicleModel({
+  config,
+  animationPlaying,
+  showInterestPoints,
+  placing,
+  drafts,
+  editingKey,
+  onPlace,
+  onRetarget,
+  onHover,
+}: VehicleModelProps) {
   const gltf = useGLTF(config.modelUrl, config.draco);
   const model = useMemo(() => {
     const object = gltf.scene.clone(true);
@@ -108,16 +127,27 @@ export function VehicleModel({ config, animationPlaying, showInterestPoints }: V
     showStrobeFrame(frames, frameIndex.current);
   });
 
-  const points = showInterestPoints ? config.interestPoints : undefined;
+  const points = showInterestPoints
+    ? visibleInterestPoints(config.interestPoints, drafts, placing ? editingKey : null)
+    : undefined;
 
   return (
     <>
       {config.animated && gltf.animations.length > 0 ? (
         <ClipPlayer clips={gltf.animations} root={model} playing={animationPlaying} />
       ) : null}
-      <primitive object={model}>
-        {points && points.length > 0 ? <InterestPoints points={points} /> : null}
-      </primitive>
+      <PointPlacer
+        object={model}
+        active={placing}
+        points={drafts}
+        editingKey={editingKey}
+        onPlace={onPlace}
+        onRetarget={onRetarget}
+        onHover={onHover}
+      >
+        {points && points.length > 0 ? <InterestPoints points={points} occluder={model} /> : null}
+      </PointPlacer>
+      {import.meta.env.DEV ? <VehicleDebug object={model} config={config} /> : null}
     </>
   );
 }
