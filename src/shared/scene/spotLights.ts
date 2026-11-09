@@ -148,7 +148,7 @@ function createTune(): SpotTune {
     decay: spotDecay,
     position: [...spotOffset],
     rotation: [0, 0, 0],
-    helper: import.meta.env.DEV,
+    helper: false,
   };
 }
 

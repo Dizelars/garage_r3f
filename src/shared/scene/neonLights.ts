@@ -232,7 +232,7 @@ export function attachNeonLights(root: Object3D): NeonRig[] {
       height: length,
       position: [0, 0, 0],
       rotation: [0, 0, 0],
-      helper: import.meta.env.DEV,
+      helper: false,
     };
     applyNeonPose(tune, neonPoses[child.name]);
     const pick = [pickMesh];
