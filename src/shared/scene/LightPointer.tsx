@@ -7,6 +7,7 @@ export type HandRig = {
   light: Object3D;
   pick: Object3D[];
   dragging: boolean;
+  wheel?: boolean;
   getIntensity: () => number;
   setIntensity: (value: number) => void;
   readTransform: () => void;
@@ -111,7 +112,6 @@ function rotateLight(rig: HandRig, camera: Camera, dx: number, dy: number): void
   right.setFromMatrixColumn(camera.matrixWorld, 0).normalize();
   rig.light.rotateOnWorldAxis(up, -dx * 0.008);
   rig.light.rotateOnWorldAxis(right, -dy * 0.008);
-  rig.light.scale.set(1, 1, 1);
 }
 
 export function LightPointer() {
@@ -219,7 +219,7 @@ export function LightPointer() {
 
     const onWheel = (event: WheelEvent) => {
       const handle = handleAt(event, get().camera, dom, get().scene);
-      if (!handle?.rig) {
+      if (!handle?.rig || handle.rig.wheel === false) {
         return;
       }
       event.preventDefault();

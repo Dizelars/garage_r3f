@@ -58,7 +58,7 @@ function RoomDebug({ root }: { root: Object3D }) {
         scale: round(root.scale.x),
       });
     }),
-  });
+  }, { collapsed: true });
 
   const signature = `${позиция.join(",")}|${поворот.join(",")}|${масштаб}`;
 
@@ -75,11 +75,16 @@ function RoomDebug({ root }: { root: Object3D }) {
   return null;
 }
 
+function ClosedFolder({ path }: { path: string }) {
+  useControls(path, {}, { collapsed: true });
+  return null;
+}
+
 function CeilingDebug({ ceiling }: { ceiling: CeilingTune }) {
-  const values = useControls("Потолок", {
+  const values = useControls("Свет.Ceilinglight", {
     свечение: { value: ceiling.led, min: 0, step: 0.05 },
     "кнопка света": ceiling.followSwitch,
-  });
+  }, { collapsed: true });
 
   useLayoutEffect(() => {
     ceiling.led = values.свечение;
@@ -91,7 +96,7 @@ function CeilingDebug({ ceiling }: { ceiling: CeilingTune }) {
 
 function SpotDebug({ rig }: { rig: SpotRig }) {
   const { tune } = rig;
-  const [values, set] = useControls(rig.name, () => ({
+  const [values, set] = useControls(`Свет.Ceilinglight.${rig.name}`, () => ({
     включен: tune.enabled,
     цвет: tune.color,
     интенсивность: { value: tune.intensity, min: 0, step: 0.1 },
@@ -137,7 +142,7 @@ function SpotDebug({ rig }: { rig: SpotRig }) {
 
 function NeonDebug({ rig }: { rig: NeonRig }) {
   const { tune } = rig;
-  const [values, set] = useControls(rig.name, () => ({
+  const [values, set] = useControls(`Свет.Neon.${rig.name}`, () => ({
     включен: tune.enabled,
     цвет: tune.color,
     интенсивность: { value: tune.intensity, min: 0, step: 0.1 },
@@ -184,6 +189,8 @@ function NeonDebug({ rig }: { rig: NeonRig }) {
 export function GarageDebug({ root, neons, spots, ceiling }: GarageDebugProps) {
   return (
     <>
+      <ClosedFolder path="Свет" />
+      <ClosedFolder path="Свет.Neon" />
       <RoomDebug root={root} />
       <CeilingDebug ceiling={ceiling} />
       {spots.map((spot) => (

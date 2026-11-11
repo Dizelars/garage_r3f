@@ -56,7 +56,7 @@ export function CameraDebug() {
         target: orbit ? roundVec(orbit.target) : null,
       });
     }),
-  })) as unknown as [CameraPose, (next: Partial<CameraPose>) => void];
+  }), { collapsed: true }) as unknown as [CameraPose, (next: Partial<CameraPose>) => void];
 
   applyLive.current = () => {
     const orbit = controlsRef.current;

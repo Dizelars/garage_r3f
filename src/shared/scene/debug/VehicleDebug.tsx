@@ -31,7 +31,7 @@ export function VehicleDebug({ object, config }: VehicleDebugProps) {
         modelScale: round(object.scale.x),
       });
     }),
-  });
+  }, { collapsed: true });
 
   const signature = `${позиция.join(",")}|${поворот.join(",")}|${масштаб}`;
 

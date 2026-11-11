@@ -69,17 +69,17 @@
 
 .interest-point {
     position: relative;
-    width: 22px;
-    height: 22px;
+    width: 12px;
+    height: 12px;
     pointer-events: auto;
 }
 
 .interest-point__dot {
     position: relative;
-    width: 22px;
-    height: 22px;
+    width: 12px;
+    height: 12px;
     padding: 0;
-    border: 2px solid #ffffff;
+    border: 1px solid #ffffff;
     border-radius: 50%;
     background: #2a2a2a;
     cursor: pointer;
@@ -107,8 +107,8 @@
 
 .interest-point__pulse {
     position: absolute;
-    inset: -2px;
-    border: 2px solid #ff8c1a;
+    inset: -1px;
+    border: 1px solid #ff8c1a;
     border-radius: 50%;
     animation: interest-pulse 1.6s ease-out infinite;
     pointer-events: none;
@@ -129,12 +129,12 @@
 .interest-point__card {
     position: absolute;
     left: 50%;
-    bottom: 32px;
+    bottom: 12px;
     transform: translateX(-50%);
-    width: 230px;
-    padding: 12px 14px;
+    width: 150px;
+    padding: 6px 8px;
     border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 14px;
+    border-radius: 10px;
     background: rgba(9, 9, 9, 0.88);
     color: #ffffff;
     text-align: left;
@@ -145,26 +145,25 @@
 .interest-point__title {
     margin: 0 0 6px;
     font-family: "MoscowSans", sans-serif;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 10px;
+    font-weight: 700;
 }
 
 .interest-point__text {
     margin: 0;
     font-family: "MoscowSans", sans-serif;
-    font-size: 13px;
+    font-size: 8px;
     font-weight: 300;
-    line-height: 18px;
 }
 
 .interest-point__close {
-    margin-top: 10px;
+    margin-top: 5px;
     padding: 0;
     border: 0;
     background: none;
     color: #62a744;
     font-family: "MoscowSans", sans-serif;
-    font-size: 13px;
+    font-size: 8px;
     cursor: pointer;
 }
 

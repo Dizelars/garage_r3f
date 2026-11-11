@@ -1,6 +1,7 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { CoddLogos } from "./CoddLogo";
 import { GarageDebug } from "./GarageDebug";
 import { LightPointer } from "./LightPointer";
 import { NeonPivot } from "./NeonPivot";
@@ -8,7 +9,7 @@ import { createCeilingTune, fadeSeconds, roomPosition, type CeilingTune } from "
 import { applyNeonRig, attachNeonLights } from "./neonLights";
 import { applySpotRig, attachSpotLights } from "./spotLights";
 
-const garageUrl = "models/garage/scene_2/gltf_action/ModernDarkGarage.gltf";
+const garageUrl = "models/garage/gltf_action/ModernDarkGarage.gltf";
 const draco = "/draco/";
 
 export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
@@ -66,6 +67,7 @@ export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
   return (
     <>
       <primitive object={built.root}>
+        <CoddLogos />
         {import.meta.env.DEV ? built.neons.map((neon) => (
           <NeonPivot key={neon.id} rig={neon} />
         )) : null}
