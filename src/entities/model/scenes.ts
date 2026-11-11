@@ -113,25 +113,37 @@ export const sceneConfigs: Record<string, SceneConfig> = {
     skyResolution: 32,
     minDistance: 2,
     floor: floor(6, 12, [0.5, 0.5]),
-    animated: true,
+    animated: false,
     interestPoints: [
       {
         id: "roof_screen",
         title: "Экран на крыше",
-        description: "Табло отображение информации",
+        description: "Табло отображения информации",
         position: [0, 0.68, 0.73],
+        camera: {
+          position: [1.7, 1.6, -1.85],
+          target: [0, 0.82, -0.88],
+        },
       },
       {
         id: "winch",
         title: "Лебедка",
         description: "Тяговое устройство, предназначенное для самостоятельного вытаскивания застрявшего автомобиля и буксировки техники",
         position: [-0.06, 0.19, -0.89],
+        camera: {
+          position: [0.85, 0.72, 2.45],
+          target: [0.07, 0.23, 1.07],
+        },
       },
       {
         id: "flashing_beacons",
         title: "Проблесковые маячки",
         description: "Служит для предупреждения других участников движения об опасности и обозначения дорожных или коммунальных работ",
         position: [-0.02, 0.65, 0.07],
+        camera: {
+          position: [1.75, 1.4, 1.05],
+          target: [0.02, 0.78, -0.08],
+        },
       },
     ],
   },

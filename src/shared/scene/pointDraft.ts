@@ -136,7 +136,10 @@ export function visibleInterestPoints(
       return [];
     }
     const draft = overrides.get(point.id);
-    return [draft ? toInterestPoint(draft) : point];
+    if (!draft) {
+      return [point];
+    }
+    return [{ ...toInterestPoint(draft), camera: point.camera }];
   });
 
   return [...merged, ...extras];

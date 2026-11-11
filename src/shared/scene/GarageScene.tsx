@@ -1,9 +1,8 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { CameraControls, type CameraControls as CameraControlsType } from "@react-three/drei";
 import { Leva } from "leva";
 import { ACESFilmicToneMapping } from "three";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { SceneConfig } from "entities/model/types";
 import { getCameraSettings } from "./camera";
 import { Bloom } from "./Bloom";
@@ -13,8 +12,10 @@ import { GainmapEnvironment } from "./GainmapEnvironment";
 import { GarageRoom } from "./GarageRoom";
 import { VehicleModel } from "./VehicleModel";
 import { PointPlacerPanel } from "./PointPlacer";
+import { CameraRig } from "./CameraRig";
 import { CameraDebug } from "./debug/CameraDebug";
 import { sceneControls } from "./sceneControls";
+import { ScenePerfPanel, ScenePerfProbe, SceneTriangleProbe, SceneTriangleWindow } from "./ScenePerf";
 import {
   fromInterestPoints,
   readPlacedPoints,
@@ -34,7 +35,7 @@ type GarageSceneProps = {
 };
 
 function ResponsiveDistance({ minDistance }: { minDistance: number }) {
-  const controls = useThree((state) => state.controls) as OrbitControlsImpl | null;
+  const controls = useThree((state) => state.controls) as CameraControlsType | null;
   const width = useThree((state) => state.size.width);
 
   useEffect(() => {
@@ -124,21 +125,15 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
         scene.environmentIntensity = config.environmentIntensity;
       }}
     >
-      <OrbitControls
+      <CameraControls
         ref={(controls) => {
           sceneControls.current = controls;
         }}
-        // makeDefault
-        // target={[0, 0.75, 0]}
-        // minPolarAngle={Math.PI * 0.4}
-        // maxPolarAngle={Math.PI * 0.55}
-        // minDistance={config.minDistance}
-        // maxDistance={initialCamera.maxDistance}
-        enableDamping
-        // enablePan={false}
-        enabled={!interiorOpen}
+        makeDefault
+        smoothTime={0.5}
       />
       <ResponsiveDistance minDistance={config.minDistance} />
+      <CameraRig interactive={!interiorOpen} />
       {import.meta.env.DEV ? <CameraDebug /> : null}
       {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
       {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
@@ -164,7 +159,11 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
         />
       </Suspense>
       {config.bloomEnabled && config.glow > 0 ? <Bloom glow={config.glow} /> : null}
+      {import.meta.env.DEV ? <ScenePerfProbe /> : null}
+      {import.meta.env.DEV ? <SceneTriangleProbe /> : null}
     </Canvas>
+    {import.meta.env.DEV ? <ScenePerfPanel /> : null}
+    {import.meta.env.DEV ? <SceneTriangleWindow /> : null}
     {import.meta.env.DEV ? (
       <Leva
         titleBar={{ title: "Сцена", drag: true, filter: true }}

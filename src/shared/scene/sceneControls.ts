@@ -1,5 +1,5 @@
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import type { CameraControls } from "@react-three/drei";
 
-export const sceneControls: { current: OrbitControlsImpl | null } = {
+export const sceneControls: { current: CameraControls | null } = {
   current: null,
 };

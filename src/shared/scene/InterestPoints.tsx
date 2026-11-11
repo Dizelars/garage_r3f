@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Html } from "@react-three/drei";
 import type { Group, Object3D } from "three";
 import type { InterestPoint } from "entities/model/types";
+import { focusCamera, releaseCamera } from "./cameraFocus";
 import { usePointOcclusion } from "./usePointOcclusion";
 
 type InterestPointsProps = {
@@ -55,6 +56,15 @@ function InterestPointView({
             }}
             onClick={(event) => {
               event.stopPropagation();
+              if (!point.camera) {
+                onToggle();
+                return;
+              }
+              if (opened) {
+                releaseCamera();
+              } else {
+                focusCamera(point.camera);
+              }
               onToggle();
             }}
           >
@@ -73,6 +83,9 @@ function InterestPointView({
                 }}
                 onClick={(event) => {
                   event.stopPropagation();
+                  if (point.camera) {
+                    releaseCamera();
+                  }
                   onClose();
                 }}
               >

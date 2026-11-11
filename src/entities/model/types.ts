@@ -15,11 +15,29 @@ export type ReflectionConfig = {
   scale: number;
 };
 
+export type CameraShot = {
+  position: Vec3;
+  target: Vec3;
+};
+
+export type CameraLock = {
+  minPolarAngle?: number;
+  maxPolarAngle?: number;
+  minAzimuthAngle?: number;
+  maxAzimuthAngle?: number;
+  minDistance?: number;
+  maxDistance?: number;
+  enableRotate?: boolean;
+  enableZoom?: boolean;
+  enablePan?: boolean;
+};
+
 export type InterestPoint = {
   id: string;
   title: string;
   description: string;
   position: Vec3;
+  camera?: CameraShot;
 };
 
 export type SceneConfig = {

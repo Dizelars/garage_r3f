@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { button, levaStore, monitor, useControls } from "leva";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import type { CameraControls } from "@react-three/drei";
+import { Vector3 } from "three";
 import { getCameraSettings } from "../camera";
 import { copyJson, formatVec, roundVec } from "./copyJson";
 
@@ -27,9 +28,10 @@ function readVec(value: unknown): Vec3 | null {
 
 export function CameraDebug() {
   const camera = useThree((state) => state.camera);
-  const controls = useThree((state) => state.controls) as OrbitControlsImpl | null;
+  const controls = useThree((state) => state.controls) as CameraControls | null;
   const cameraRef = useRef(camera);
-  const controlsRef = useRef<OrbitControlsImpl | null>(null);
+  const controlsRef = useRef<CameraControls | null>(null);
+  const target = useRef(new Vector3());
   const applyLive = useRef<() => void>(() => {});
   cameraRef.current = camera;
   controlsRef.current = controls;
@@ -37,7 +39,13 @@ export function CameraDebug() {
   const initial = getCameraSettings(window.innerWidth);
   const [, setPose] = useControls("Камера", () => ({
     "позиция сейчас": monitor(() => formatVec(cameraRef.current.position), { interval: 100 }),
-    "цель сейчас": monitor(() => formatVec(controlsRef.current?.target), { interval: 100 }),
+    "цель сейчас": monitor(() => {
+      const orbit = controlsRef.current;
+      if (!orbit) {
+        return "—";
+      }
+      return formatVec(orbit.getTarget(target.current, false));
+    }, { interval: 100 }),
     позиция: {
       value: initial.position,
       step: 0.01,
@@ -53,7 +61,7 @@ export function CameraDebug() {
       const orbit = controlsRef.current;
       copyJson("камера", {
         position: roundVec(cameraRef.current.position),
-        target: orbit ? roundVec(orbit.target) : null,
+        target: orbit ? roundVec(orbit.getTarget(target.current, false)) : null,
       });
     }),
   }), { collapsed: true }) as unknown as [CameraPose, (next: Partial<CameraPose>) => void];
@@ -62,7 +70,7 @@ export function CameraDebug() {
     const orbit = controlsRef.current;
     setPose({
       позиция: roundVec(cameraRef.current.position),
-      цель: orbit ? roundVec(orbit.target) : [0, 0.75, 0],
+      цель: orbit ? roundVec(orbit.getTarget(target.current, false)) : [0, 0.75, 0],
     });
   };
 
@@ -80,13 +88,11 @@ export function CameraDebug() {
         return;
       }
       last = signature;
-      camera.position.set(position[0], position[1], position[2]);
       const orbit = controlsRef.current;
       if (!orbit) {
         return;
       }
-      orbit.target.set(target[0], target[1], target[2]);
-      orbit.update();
+      void orbit.setLookAt(position[0], position[1], position[2], target[0], target[1], target[2], false);
     };
 
     apply();
