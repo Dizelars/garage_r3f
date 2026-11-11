@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { CameraControls, type CameraControls as CameraControlsType } from "@react-three/drei";
+import { CameraControls, Environment, type CameraControls as CameraControlsType } from "@react-three/drei";
 import { Leva } from "leva";
 import { ACESFilmicToneMapping } from "three";
 import type { SceneConfig } from "entities/model/types";
@@ -8,7 +8,6 @@ import { getCameraSettings } from "./camera";
 import { Bloom } from "./Bloom";
 // import { ConcreteFloor } from "./ConcreteFloor";
 // import { DockReflection } from "./DockReflection";
-import { GainmapEnvironment } from "./GainmapEnvironment";
 import { GarageRoom } from "./GarageRoom";
 import { VehicleModel } from "./VehicleModel";
 import { PointPlacerPanel } from "./PointPlacer";
@@ -137,15 +136,10 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
       {import.meta.env.DEV ? <CameraDebug /> : null}
       {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
       {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
-      {/* <GainmapEnvironment
-        url={config.environment}
-        skyHeight={config.skyHeight}
-        skyRadius={config.skyRadius}
-        skyResolution={config.skyResolution}
-        intensity={config.environmentIntensity}
-      /> */}
+      <Environment files={config.environment} environmentIntensity={0.8} />
       <Suspense fallback={null}>
-        <GarageRoom lightsOn={lightsOn} />
+        {/* <GarageRoom lightsOn={lightsOn} /> */}
+        <GarageRoom lightsOn={false} />
         <VehicleModel
           config={config}
           animationPlaying={animationPlaying}

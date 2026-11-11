@@ -8,6 +8,44 @@ import { collectBlockers, planCameraPath } from "./cameraPath";
 import { sceneControls } from "./sceneControls";
 
 const { ACTION } = CameraControlsImpl;
+const fullTurn = Math.PI * 2;
+
+type OrbitAngles = {
+  theta: number;
+};
+
+type AngleControls = CameraControls & {
+  _spherical: OrbitAngles;
+  _sphericalEnd: OrbitAngles;
+};
+
+function closestAzimuth(current: number, next: number): number {
+  const turn = (((next - current + Math.PI) % fullTurn) + fullTurn) % fullTurn - Math.PI;
+  return current + turn;
+}
+
+function keepShortAzimuth(controls: CameraControls): void {
+  const orbit = controls as AngleControls;
+  orbit._sphericalEnd.theta = closestAzimuth(orbit._spherical.theta, orbit._sphericalEnd.theta);
+}
+
+function moveLookAt(
+  controls: CameraControls,
+  position: Vector3,
+  target: Vector3,
+): Promise<void> {
+  const move = controls.setLookAt(
+    position.x,
+    position.y,
+    position.z,
+    target.x,
+    target.y,
+    target.z,
+    true,
+  );
+  keepShortAzimuth(controls);
+  return move;
+}
 
 type MouseButtons = CameraControls["mouseButtons"];
 type Touches = CameraControls["touches"];
@@ -130,7 +168,9 @@ export function CameraRig({ interactive }: { interactive: boolean }) {
         applySnapshot(controls, baseline.current);
         baseline.current = null;
       }
-      void controls.reset(true).then(() => {
+      const home = controls.reset(true);
+      keepShortAzimuth(controls);
+      void home.then(() => {
         releaseInput(controls, token);
       });
       return;
@@ -179,7 +219,7 @@ export function CameraRig({ interactive }: { interactive: boolean }) {
         const amount = index / (points.length - 1);
         look.copy(fromTarget).lerp(toTarget, amount);
         const point = points[index];
-        await controls.setLookAt(point.x, point.y, point.z, look.x, look.y, look.z, true);
+        await moveLookAt(controls, point, look);
       }
       if (activeToken.current !== token) {
         return;
