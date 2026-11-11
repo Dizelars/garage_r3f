@@ -1,25 +1,40 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { CameraControls, Environment, type CameraControls as CameraControlsType } from "@react-three/drei";
+import { Leva } from "leva";
 import { ACESFilmicToneMapping } from "three";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
 import type { SceneConfig } from "entities/model/types";
-import { getCameraSettings } from "shared/scene/camera";
-import { Bloom } from "shared/scene/Bloom";
-import { ConcreteFloor } from "shared/scene/ConcreteFloor";
-import { DockReflection } from "shared/scene/DockReflection";
-import { GainmapEnvironment } from "shared/scene/GainmapEnvironment";
-import { VehicleModel } from "shared/scene/VehicleModel";
+import { getCameraSettings } from "./camera";
+import { Bloom } from "./Bloom";
+// import { ConcreteFloor } from "./ConcreteFloor";
+// import { DockReflection } from "./DockReflection";
+import { GarageRoom } from "./GarageRoom";
+import { VehicleModel } from "./VehicleModel";
+import { PointPlacerPanel } from "./PointPlacer";
+import { CameraRig } from "./CameraRig";
+import { CameraDebug } from "./debug/CameraDebug";
+import { sceneControls } from "./sceneControls";
+import { ScenePerfPanel, ScenePerfProbe, SceneTriangleProbe, SceneTriangleWindow } from "./ScenePerf";
+import {
+  fromInterestPoints,
+  readPlacedPoints,
+  writePlacedPoints,
+  type PlacedPoint,
+  type PointFieldPatch,
+  type PointHover,
+  type Vec3,
+} from "./pointDraft";
 
 type GarageSceneProps = {
   config: SceneConfig;
   interiorOpen: boolean;
   sceneScaled: boolean;
   animationPlaying: boolean;
+  lightsOn: boolean;
 };
 
 function ResponsiveDistance({ minDistance }: { minDistance: number }) {
-  const controls = useThree((state) => state.controls) as OrbitControlsImpl | null;
+  const controls = useThree((state) => state.controls) as CameraControlsType | null;
   const width = useThree((state) => state.size.width);
 
   useEffect(() => {
@@ -33,10 +48,54 @@ function ResponsiveDistance({ minDistance }: { minDistance: number }) {
   return null;
 }
 
-export function GarageScene({ config, interiorOpen, sceneScaled, animationPlaying }: GarageSceneProps) {
+export function GarageScene({ config, interiorOpen, sceneScaled, animationPlaying, lightsOn }: GarageSceneProps) {
   const initialCamera = getCameraSettings(window.innerWidth);
+  const [placing, setPlacing] = useState(false);
+  const [drafts, setDrafts] = useState<PlacedPoint[]>(() => (
+    import.meta.env.DEV ? readPlacedPoints(config.modelUrl) : []
+  ));
+  const [hover, setHover] = useState<PointHover | null>(null);
+  const [editingKey, setEditingKey] = useState<string | null>(null);
+  const loadedUrl = useRef(config.modelUrl);
+  const placingActive = import.meta.env.DEV && placing && !interiorOpen;
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) {
+      return;
+    }
+    if (loadedUrl.current !== config.modelUrl) {
+      loadedUrl.current = config.modelUrl;
+      setDrafts(readPlacedPoints(config.modelUrl));
+      setPlacing(false);
+      setHover(null);
+      setEditingKey(null);
+      return;
+    }
+    writePlacedPoints(config.modelUrl, drafts);
+  }, [config.modelUrl, drafts]);
+
+  const placePoint = (point: PlacedPoint) => {
+    setDrafts((current) => [...current, point]);
+  };
+
+  const updatePoint = (key: string, patch: PointFieldPatch) => {
+    setDrafts((current) => current.map((point) => (
+      point.key === key ? { ...point, ...patch } : point
+    )));
+  };
+
+  const retargetPoint = (key: string, position: Vec3) => {
+    setDrafts((current) => current.map((point) => (
+      point.key === key ? { ...point, position } : point
+    )));
+  };
+
+  const removePoint = (key: string) => {
+    setDrafts((current) => current.filter((point) => point.key !== key));
+  };
 
   return (
+    <>
     <Canvas
       id="webgl"
       className={sceneScaled ? "threeJSScene active" : "threeJSScene"}
@@ -65,34 +124,63 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
         scene.environmentIntensity = config.environmentIntensity;
       }}
     >
-      <OrbitControls
+      <CameraControls
+        ref={(controls) => {
+          sceneControls.current = controls;
+        }}
         makeDefault
-        target={[0, 0.75, 0]}
-        maxPolarAngle={Math.PI * 0.5}
-        minDistance={config.minDistance}
-        maxDistance={initialCamera.maxDistance}
-        enableDamping
-        enablePan={false}
-        enabled={!interiorOpen}
+        smoothTime={0.5}
       />
       <ResponsiveDistance minDistance={config.minDistance} />
-      {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
-      {config.reflection ? <DockReflection reflection={config.reflection} /> : null}
-      <GainmapEnvironment
-        url={config.environment}
-        skyHeight={config.skyHeight}
-        skyRadius={config.skyRadius}
-        skyResolution={config.skyResolution}
-        intensity={config.environmentIntensity}
-      />
+      <CameraRig interactive={!interiorOpen} />
+      {import.meta.env.DEV ? <CameraDebug /> : null}
+      {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
+      {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
+      <Environment files={config.environment} environmentIntensity={0.8} />
       <Suspense fallback={null}>
+        {/* <GarageRoom lightsOn={lightsOn} /> */}
+        <GarageRoom lightsOn={false} />
         <VehicleModel
           config={config}
           animationPlaying={animationPlaying}
           showInterestPoints={!interiorOpen}
+          placing={placingActive}
+          drafts={drafts}
+          editingKey={editingKey}
+          onPlace={placePoint}
+          onRetarget={retargetPoint}
+          onHover={setHover}
         />
       </Suspense>
       {config.bloomEnabled && config.glow > 0 ? <Bloom glow={config.glow} /> : null}
+      {import.meta.env.DEV ? <ScenePerfProbe /> : null}
+      {import.meta.env.DEV ? <SceneTriangleProbe /> : null}
     </Canvas>
+    {import.meta.env.DEV ? <ScenePerfPanel /> : null}
+    {import.meta.env.DEV ? <SceneTriangleWindow /> : null}
+    {import.meta.env.DEV ? (
+      <Leva
+        titleBar={{ title: "Сцена", drag: true, filter: true }}
+      />
+    ) : null}
+    {import.meta.env.DEV ? (
+      <PointPlacerPanel
+        active={placingActive}
+        label="Точки"
+        hint="Короткий клик ставит точку. У раскрытой точки клик по модели заменяет координаты. Протяжка только крутит камеру."
+        points={drafts}
+        hover={hover}
+        onToggle={() => {
+          setPlacing((value) => !value);
+          setHover(null);
+        }}
+        onUpdate={updatePoint}
+        onRemove={removePoint}
+        onClear={() => setDrafts([])}
+        onEditingChange={setEditingKey}
+        onLoadCurrent={() => setDrafts(fromInterestPoints(config.interestPoints ?? []))}
+      />
+    ) : null}
+    </>
   );
 }
