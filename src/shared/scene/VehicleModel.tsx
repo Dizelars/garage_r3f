@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { LoopRepeat, Mesh, MeshStandardMaterial, type AnimationClip, type Object3D } from "three";
@@ -8,6 +8,7 @@ import { VehicleDebug } from "./debug/VehicleDebug";
 import { PointPlacer } from "./PointPlacer";
 import { visibleInterestPoints, type PlacedPoint, type PointHover, type Vec3 } from "./pointDraft";
 import { collectStrobeFrames, showStrobeFrame } from "shared/scene/strobeFrames";
+import { patchEnvProjection } from "./envProjection";
 
 const strobeStepSeconds = 0.18;
 
@@ -98,6 +99,10 @@ export function VehicleModel({
 
     return object;
   }, [config, gltf.scene]);
+
+  useLayoutEffect(() => {
+    patchEnvProjection(model);
+  }, [model]);
 
   const frames = useMemo(() => collectStrobeFrames(model), [model]);
   const frameIndex = useRef(0);

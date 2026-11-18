@@ -7,9 +7,11 @@ import { LightPointer } from "./LightPointer";
 import { NeonPivot } from "./NeonPivot";
 import { createCeilingTune, fadeSeconds, roomPosition, type CeilingTune } from "./garageTune";
 import { applyNeonRig, attachNeonLights } from "./neonLights";
+import { patchEnvProjection } from "./envProjection";
 import { applySpotRig, attachSpotLights } from "./spotLights";
 
-const garageUrl = "models/garage/gltf_action/ModernDarkGarage.gltf";
+// const garageUrl = "models/garage/gltf_action/ModernDarkGarage.gltf";
+const garageUrl = "models/garage/gltf_logo_glow/Garage_logo_glow.gltf";
 const draco = "/draco/";
 
 export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
@@ -29,6 +31,10 @@ export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
   const master = useRef(lightsOn ? 1 : 0);
   const lightsOnRef = useRef(lightsOn);
   lightsOnRef.current = lightsOn;
+
+  useLayoutEffect(() => {
+    patchEnvProjection(built.root);
+  }, [built.root]);
 
   useLayoutEffect(() => {
     const helpers = built.spots.flatMap((spot) => (spot.helper ? [spot.helper] : []));
@@ -67,7 +73,7 @@ export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
   return (
     <>
       <primitive object={built.root}>
-        <CoddLogos />
+        {/* <CoddLogos /> */}
         {import.meta.env.DEV ? built.neons.map((neon) => (
           <NeonPivot key={neon.id} rig={neon} />
         )) : null}

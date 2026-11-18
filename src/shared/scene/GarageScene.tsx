@@ -1,6 +1,6 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { CameraControls, Environment, type CameraControls as CameraControlsType } from "@react-three/drei";
+import { CameraControls, type CameraControls as CameraControlsType } from "@react-three/drei";
 import { Leva } from "leva";
 import { ACESFilmicToneMapping } from "three";
 import type { SceneConfig } from "entities/model/types";
@@ -9,6 +9,7 @@ import { Bloom } from "./Bloom";
 // import { ConcreteFloor } from "./ConcreteFloor";
 // import { DockReflection } from "./DockReflection";
 import { GarageRoom } from "./GarageRoom";
+import { SceneEnvironment } from "./SceneEnvironment";
 import { VehicleModel } from "./VehicleModel";
 import { PointPlacerPanel } from "./PointPlacer";
 import { CameraRig } from "./CameraRig";
@@ -136,7 +137,7 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
       {import.meta.env.DEV ? <CameraDebug /> : null}
       {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
       {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
-      <Environment files={config.environment} environmentIntensity={0.8} />
+      <SceneEnvironment config={config} />
       <Suspense fallback={null}>
         {/* <GarageRoom lightsOn={lightsOn} /> */}
         <GarageRoom lightsOn={false} />
