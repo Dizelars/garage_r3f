@@ -1,42 +1,37 @@
 import { useProgress } from "@react-three/drei";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { LoaderField } from "./LoaderField";
 
 export function SceneProgress() {
   const { active, progress } = useProgress();
   const [visible, setVisible] = useState(true);
-  const percent = Math.max(1, Math.min(100, Math.round(progress)));
-
-  useEffect(() => {
-    if (!active && progress >= 100) {
-      setVisible(false);
-    }
-  }, [active, progress]);
+  const percent = Math.max(0, Math.min(100, Math.round(progress)));
+  const ready = !active && progress >= 100;
 
   if (!visible) {
     return null;
   }
 
   return (
-    <div className="progress-bar">
-      <div className="progress-bar-container">
-        <div className="image">
-          <img
-            className="no_animated"
-            src="media/images/modelPage/loader/logo.gif"
-            alt="цодд"
-            fetchPriority="high"
-          />
-        </div>
-        <span id="progress-label">{percent}%</span>
-        <div id="hellopreloader_barWrapper">
-          <progress id="progress-bar" value={percent} max={100} style={{ width: `${percent}%` }} />
-        </div>
-        <label htmlFor="progress-bar" id="progress_text">
-          Загружаем модель в высоком разрешении.
-          <br />
-          Пожалуйста, дождитесь завершения
-        </label>
-      </div>
+    <div className="loader-field" role="status" aria-live="polite">
+      <LoaderField progress={percent} />
+      <span className="loader-field__percent">{percent}%</span>
+      {ready ? (
+        <button
+          className="loader-field__enter"
+          type="button"
+          onClick={() => setVisible(false)}
+          onPointerMove={(event) => {
+            const rect = event.currentTarget.getBoundingClientRect();
+            const x = ((event.clientX - rect.left) / rect.width) * 100;
+            const y = ((event.clientY - rect.top) / rect.height) * 100;
+            event.currentTarget.style.setProperty("--glow-x", `${x}%`);
+            event.currentTarget.style.setProperty("--glow-y", `${y}%`);
+          }}
+        >
+          В гараж
+        </button>
+      ) : null}
     </div>
   );
 }
