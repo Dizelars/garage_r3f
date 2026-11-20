@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
 import type { FloorConfig } from "entities/model/types";
-import { createRadialTexture, makeConcrete } from "shared/scene/makeConcrete";
+import { createRadialTexture, makeConcrete } from "./makeConcrete";
 
 type ConcreteFloorProps = {
   floor: FloorConfig;

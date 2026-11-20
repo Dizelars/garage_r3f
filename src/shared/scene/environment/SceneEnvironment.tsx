@@ -2,7 +2,7 @@ import { useLayoutEffect } from "react";
 import { Environment } from "@react-three/drei";
 import { button, useControls } from "leva";
 import type { SceneConfig } from "entities/model/types";
-import { copyJson, round } from "./debug/copyJson";
+import { copyJson, round } from "../debug/copyJson";
 import { setEnvProjection } from "./envProjection";
 
 const environmentYaw: [number, number, number] = [0, Math.PI / 2, 0];

@@ -1,7 +1,7 @@
 import type { FloorConfig, SceneConfig } from "entities/model/types";
 
 const draco = "/draco/";
-const garage = "/environmentMaps/jpg/garage.jpg";
+// const garage = "/environmentMaps/jpg/garage.jpg";
 const new_garage = "/environmentMaps/jpg/garage_logo_new.jpg";
 
 function floor(

@@ -3,12 +3,12 @@ import { useFrame } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { LoopRepeat, Mesh, MeshStandardMaterial, type AnimationClip, type Object3D } from "three";
 import type { SceneConfig } from "entities/model/types";
-import { InterestPoints } from "shared/scene/InterestPoints";
-import { VehicleDebug } from "./debug/VehicleDebug";
-import { PointPlacer } from "./PointPlacer";
-import { visibleInterestPoints, type PlacedPoint, type PointHover, type Vec3 } from "./pointDraft";
-import { collectStrobeFrames, showStrobeFrame } from "shared/scene/strobeFrames";
-import { patchEnvProjection } from "./envProjection";
+import { InterestPoints } from "../points/InterestPoints";
+import { VehicleDebug } from "./VehicleDebug";
+import { PointPlacer } from "../points/PointPlacer";
+import { visibleInterestPoints, type PlacedPoint, type PointHover, type Vec3 } from "../points/pointDraft";
+import { collectStrobeFrames, showStrobeFrame } from "./strobeFrames";
+import { patchEnvProjection } from "../environment/envProjection";
 
 const strobeStepSeconds = 0.18;
 

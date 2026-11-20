@@ -4,18 +4,18 @@ import { CameraControls, type CameraControls as CameraControlsType } from "@reac
 import { Leva } from "leva";
 import { ACESFilmicToneMapping } from "three";
 import type { SceneConfig } from "entities/model/types";
-import { getCameraSettings } from "./camera";
-import { Bloom } from "./Bloom";
-// import { ConcreteFloor } from "./ConcreteFloor";
-// import { DockReflection } from "./DockReflection";
-import { GarageRoom } from "./GarageRoom";
-import { SceneEnvironment } from "./SceneEnvironment";
-import { VehicleModel } from "./VehicleModel";
-import { PointPlacerPanel } from "./PointPlacer";
-import { CameraRig } from "./CameraRig";
-import { CameraDebug } from "./debug/CameraDebug";
-import { sceneControls } from "./sceneControls";
-import { ScenePerfPanel, ScenePerfProbe, SceneTriangleProbe, SceneTriangleWindow } from "./ScenePerf";
+import { getCameraSettings } from "./camera/camera";
+import { Bloom } from "./environment/Bloom";
+// import { ConcreteFloor } from "./environment/ConcreteFloor";
+// import { DockReflection } from "./environment/DockReflection";
+import { GarageRoom } from "./garage/GarageRoom";
+import { SceneEnvironment } from "./environment/SceneEnvironment";
+import { VehicleModel } from "./vehicle/VehicleModel";
+import { PointPlacerPanel } from "./points/PointPlacer";
+import { CameraRig } from "./camera/CameraRig";
+import { CameraDebug } from "./camera/CameraDebug";
+import { sceneControls } from "./camera/sceneControls";
+import { ScenePerfPanel, ScenePerfProbe, SceneTriangleProbe, SceneTriangleWindow } from "./perf/ScenePerf";
 import {
   fromInterestPoints,
   readPlacedPoints,
@@ -24,7 +24,7 @@ import {
   type PointFieldPatch,
   type PointHover,
   type Vec3,
-} from "./pointDraft";
+} from "./points/pointDraft";
 
 type GarageSceneProps = {
   config: SceneConfig;

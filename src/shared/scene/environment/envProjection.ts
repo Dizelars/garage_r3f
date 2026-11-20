@@ -1,5 +1,5 @@
 import { Mesh, MeshStandardMaterial, Vector3, type Object3D } from "three";
-import { roomPosition } from "./garageTune";
+import { roomPosition } from "../garage/garageTune";
 
 const envBoxCenter = new Vector3();
 const envBoxHalf = new Vector3();

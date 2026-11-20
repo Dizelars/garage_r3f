@@ -19,7 +19,7 @@ import {
   spotDistance,
   spotOffset,
   spotPenumbra,
-} from "./garageTune";
+} from "../garage/garageTune";
 
 const ledDrop = 0.02;
 const toRad = Math.PI / 180;

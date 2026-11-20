@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Html } from "@react-three/drei";
 import type { Group, Object3D } from "three";
 import type { InterestPoint } from "entities/model/types";
-import { focusCamera, releaseCamera } from "./cameraFocus";
+import { focusCamera, releaseCamera } from "../camera/cameraFocus";
 import { usePointOcclusion } from "./usePointOcclusion";
 
 type InterestPointsProps = {

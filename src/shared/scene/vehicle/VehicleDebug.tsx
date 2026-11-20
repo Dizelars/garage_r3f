@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef } from "react";
 import { button, useControls } from "leva";
 import type { Object3D } from "three";
 import type { SceneConfig } from "entities/model/types";
-import { copyJson, round, roundVec } from "./copyJson";
+import { copyJson, round, roundVec } from "../debug/copyJson";
 
 type VehicleDebugProps = {
   object: Object3D;

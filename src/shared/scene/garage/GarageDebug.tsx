@@ -1,10 +1,10 @@
 import { useLayoutEffect, useRef } from "react";
 import { button, useControls } from "leva";
 import { Vector3, type Object3D } from "three";
-import { copyJson, round, roundVec } from "./debug/copyJson";
+import { copyJson, round, roundVec } from "../debug/copyJson";
 import { roomPosition, type CeilingTune } from "./garageTune";
-import type { NeonRig } from "./neonLights";
-import type { SpotRig } from "./spotLights";
+import type { NeonRig } from "../lights/neonLights";
+import type { SpotRig } from "../lights/spotLights";
 
 const neonWorld = new Vector3();
 

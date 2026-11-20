@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import { Object3D, Raycaster, Scene, Vector2, Vector3, type Camera } from "three";
-import { sceneControls } from "./sceneControls";
+import { sceneControls } from "../camera/sceneControls";
 
 export type HandRig = {
   light: Object3D;

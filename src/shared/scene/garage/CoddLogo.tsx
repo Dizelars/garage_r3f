@@ -2,8 +2,8 @@ import { useEffect, useLayoutEffect, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { button, useControls } from "leva";
 import { Mesh, MeshStandardMaterial, type Object3D } from "three";
-import { copyJson, round, roundVec } from "./debug/copyJson";
-import type { HandRig } from "./LightPointer";
+import { copyJson, round, roundVec } from "../debug/copyJson";
+import type { HandRig } from "../lights/LightPointer";
 
 const coddLogoUrl = "models/codd_logo/MTCC.gltf";
 const draco = "/draco/";

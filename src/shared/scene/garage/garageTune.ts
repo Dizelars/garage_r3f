@@ -1,5 +1,4 @@
-export const roomPosition: [number, number, number] = [0, 0.12, 2.5];
-
+export const roomPosition: [number, number, number] = [0, 0.18, 2.5];
 export const spotColor = "#fff4e6";
 export const spotCandela = 25;
 export const spotDistance = 14;

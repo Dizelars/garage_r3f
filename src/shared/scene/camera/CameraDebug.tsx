@@ -3,8 +3,8 @@ import { useThree } from "@react-three/fiber";
 import { button, levaStore, monitor, useControls } from "leva";
 import type { CameraControls } from "@react-three/drei";
 import { Vector3 } from "three";
-import { getCameraSettings } from "../camera";
-import { copyJson, formatVec, roundVec } from "./copyJson";
+import { getCameraSettings } from "./camera";
+import { copyJson, formatVec, roundVec } from "../debug/copyJson";
 
 type CameraPose = {
   позиция: [number, number, number];

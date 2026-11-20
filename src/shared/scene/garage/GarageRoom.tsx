@@ -1,17 +1,16 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
-import { CoddLogos } from "./CoddLogo";
+// import { CoddLogos } from "./CoddLogo";
 import { GarageDebug } from "./GarageDebug";
-import { LightPointer } from "./LightPointer";
-import { NeonPivot } from "./NeonPivot";
+import { LightPointer } from "../lights/LightPointer";
+import { NeonPivot } from "../lights/NeonPivot";
 import { createCeilingTune, fadeSeconds, roomPosition, type CeilingTune } from "./garageTune";
-import { applyNeonRig, attachNeonLights } from "./neonLights";
-import { patchEnvProjection } from "./envProjection";
-import { applySpotRig, attachSpotLights } from "./spotLights";
+import { applyNeonRig, attachNeonLights } from "../lights/neonLights";
+import { patchEnvProjection } from "../environment/envProjection";
+import { applySpotRig, attachSpotLights } from "../lights/spotLights";
 
-// const garageUrl = "models/garage/gltf_action/ModernDarkGarage.gltf";
-const garageUrl = "models/garage/gltf_logo_glow/Garage_logo_glow.gltf";
+const garageUrl = "models/garage/gltf_logo_glow_darken/Garage_logo_glow_restored_floor.gltf";
 const draco = "/draco/";
 
 export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
