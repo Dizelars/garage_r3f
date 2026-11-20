@@ -1,5 +1,6 @@
 import { useLayoutEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
+import { Vector2 } from "three";
 import type { FloorConfig } from "entities/model/types";
 import { createRadialTexture, makeConcrete } from "./makeConcrete";
 
@@ -20,6 +21,10 @@ export function ConcreteFloor({ floor }: ConcreteFloorProps) {
       [1, "#000000"],
     ]),
     [],
+  );
+  const normalScale = useMemo(
+    () => new Vector2(floor.normalScale[0], floor.normalScale[1]),
+    [floor.normalScale],
   );
 
   useLayoutEffect(() => {
@@ -43,7 +48,7 @@ export function ConcreteFloor({ floor }: ConcreteFloorProps) {
         roughnessMap={textures.roughnessMap}
         roughness={1}
         metalness={0}
-        normalScale={floor.normalScale}
+        normalScale={normalScale}
         alphaMap={alphaMap}
         transparent
         depthWrite={false}

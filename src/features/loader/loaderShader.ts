@@ -32,15 +32,17 @@ void main() {
     aTorus.y,
     -sine * aTorus.x + cosine * aTorus.z
   );
-  vec3 fromPosition = spherePos * sphereWeight + aLogo * logoWeight + torusPos * torusWeight + aLogo * logoAgainWeight;
-  vec3 toPosition = aLogo * sphereWeight + torusPos * logoWeight + aLogo * torusWeight + spherePos * logoAgainWeight;
+  vec3 fromPosition = aLogo * sphereWeight + spherePos * logoWeight + torusPos * torusWeight + aLogo * logoAgainWeight;
+  vec3 toPosition = spherePos * sphereWeight + torusPos * logoWeight + aLogo * torusWeight + aLogo * logoAgainWeight;
   vec3 position = mix(fromPosition, toPosition, blend);
   position *= mix(0.84, 1.0, uProgress);
   for (int sampleIndex = 0; sampleIndex < 12; sampleIndex++) {
     vec2 delta = position.xy - uTrail[sampleIndex].xy;
     float distanceToCursor = length(delta);
-    float force = uTrail[sampleIndex].z * exp(-distanceToCursor * distanceToCursor * 200.0);
-    position.xy += delta / max(distanceToCursor, 0.001) * force * 0.28;
+    float strength = uTrail[sampleIndex].z;
+    strength = strength * strength * (3.0 - 2.0 * strength);
+    float force = strength * exp(-distanceToCursor * distanceToCursor * 80.0);
+    position.xy += delta / max(distanceToCursor, 0.02) * force * 0.1;
   }
   float depth = position.z + 2.6;
   float aspect = uResolution.x / max(uResolution.y, 1.0);

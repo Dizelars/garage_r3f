@@ -73,11 +73,11 @@ export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
     <>
       <primitive object={built.root}>
         {/* <CoddLogos /> */}
-        {import.meta.env.DEV ? built.neons.map((neon) => (
+        {/* {import.meta.env.DEV ? built.neons.map((neon) => (
           <NeonPivot key={neon.id} rig={neon} />
-        )) : null}
+        )) : null} */}
       </primitive>
-      {import.meta.env.DEV ? (
+      {/* {import.meta.env.DEV ? (
         <>
       <LightPointer />
           <GarageDebug
@@ -87,7 +87,7 @@ export function GarageRoom({ lightsOn }: { lightsOn: boolean }) {
             ceiling={ceiling}
           />
         </>
-      ) : null}
+      ) : null} */}
     </>
   );
 }

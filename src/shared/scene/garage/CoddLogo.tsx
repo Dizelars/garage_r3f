@@ -4,6 +4,7 @@ import { button, useControls } from "leva";
 import { Mesh, MeshStandardMaterial, type Object3D } from "three";
 import { copyJson, round, roundVec } from "../debug/copyJson";
 import type { HandRig } from "../lights/LightPointer";
+import { attachHiddenRig } from "../lights/rigUserData";
 
 const coddLogoUrl = "models/codd_logo/MTCC.gltf";
 const draco = "/draco/";
@@ -91,7 +92,7 @@ function attachLogoRig(root: Object3D, material: MeshStandardMaterial): LogoRig 
     commit: () => {},
   };
   root.traverse((child) => {
-    child.userData.rig = rig;
+    attachHiddenRig(child, rig);
   });
   return rig;
 }

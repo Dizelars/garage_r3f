@@ -5,6 +5,7 @@ import type { CameraControls } from "@react-three/drei";
 import { Vector3 } from "three";
 import { getCameraSettings } from "./camera";
 import { copyJson, formatVec, roundVec } from "../debug/copyJson";
+import { captureCameraPose, setTheatreCameraValues } from "./theatreCamera";
 
 type CameraPose = {
   позиция: [number, number, number];
@@ -63,6 +64,18 @@ export function CameraDebug() {
         position: roundVec(cameraRef.current.position),
         target: orbit ? roundVec(orbit.getTarget(target.current, false)) : null,
       });
+    }),
+    "theatre: записать позу": button(() => {
+      const orbit = controlsRef.current;
+      if (!orbit) {
+        return;
+      }
+      const pose = captureCameraPose(orbit);
+      setTheatreCameraValues({
+        position: pose.position,
+        target: pose.target,
+      });
+      console.log("Theatre camera pose:", pose);
     }),
   }), { collapsed: true }) as unknown as [CameraPose, (next: Partial<CameraPose>) => void];
 

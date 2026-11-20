@@ -1,10 +1,12 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { CameraControls, type CameraControls as CameraControlsType } from "@react-three/drei";
+import { SheetProvider } from "@theatre/r3f";
 import { Leva } from "leva";
 import { ACESFilmicToneMapping } from "three";
 import type { SceneConfig } from "entities/model/types";
 import { getCameraSettings } from "./camera/camera";
+import { getCameraSheet } from "./camera/theatreCamera";
 import { Bloom } from "./environment/Bloom";
 // import { ConcreteFloor } from "./environment/ConcreteFloor";
 // import { DockReflection } from "./environment/DockReflection";
@@ -14,6 +16,7 @@ import { VehicleModel } from "./vehicle/VehicleModel";
 import { PointPlacerPanel } from "./points/PointPlacer";
 import { CameraRig } from "./camera/CameraRig";
 import { CameraDebug } from "./camera/CameraDebug";
+import { TheatreCameraRig } from "./camera/TheatreCameraRig";
 import { sceneControls } from "./camera/sceneControls";
 import { ScenePerfPanel, ScenePerfProbe, SceneTriangleProbe, SceneTriangleWindow } from "./perf/ScenePerf";
 import {
@@ -25,6 +28,10 @@ import {
   type PointHover,
   type Vec3,
 } from "./points/pointDraft";
+import { editable as e } from "@theatre/r3f";
+if (import.meta.env.DEV) {
+  import("./camera/theatreStudio");
+}
 
 type GarageSceneProps = {
   config: SceneConfig;
@@ -42,8 +49,11 @@ function ResponsiveDistance({ minDistance }: { minDistance: number }) {
     if (!controls) {
       return;
     }
-    controls.minDistance = minDistance;
-    controls.maxDistance = getCameraSettings(width).maxDistance;
+    // Ограничения дистанции временно сняты:
+    // controls.minDistance = minDistance;
+    // controls.maxDistance = getCameraSettings(width).maxDistance;
+    controls.minDistance = 0;
+    controls.maxDistance = Infinity;
   }, [controls, minDistance, width]);
 
   return null;
@@ -111,6 +121,7 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
         antialias: true,
         powerPreference: "high-performance",
         toneMapping: ACESFilmicToneMapping,
+        preserveDrawingBuffer: true,
       }}
       style={{
         position: "fixed",
@@ -125,46 +136,49 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
         scene.environmentIntensity = config.environmentIntensity;
       }}
     >
-      <CameraControls
-        ref={(controls) => {
-          sceneControls.current = controls;
-        }}
-        makeDefault
-        smoothTime={0.5}
-      />
-      <ResponsiveDistance minDistance={config.minDistance} />
-      <CameraRig interactive={!interiorOpen} />
-      {import.meta.env.DEV ? <CameraDebug /> : null}
-      {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
-      {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
-      <SceneEnvironment config={config} />
-      <Suspense fallback={null}>
-        {/* <GarageRoom lightsOn={lightsOn} /> */}
-        <GarageRoom lightsOn={false} />
-        <VehicleModel
-          config={config}
-          animationPlaying={animationPlaying}
-          showInterestPoints={!interiorOpen}
-          placing={placingActive}
-          drafts={drafts}
-          editingKey={editingKey}
-          onPlace={placePoint}
-          onRetarget={retargetPoint}
-          onHover={setHover}
+      <SheetProvider sheet={getCameraSheet()}>
+        <CameraControls
+          ref={(controls) => {
+            sceneControls.current = controls;
+          }}
+          makeDefault
+          smoothTime={0.5}
         />
-      </Suspense>
-      {config.bloomEnabled && config.glow > 0 ? <Bloom glow={config.glow} /> : null}
-      {import.meta.env.DEV ? <ScenePerfProbe /> : null}
-      {import.meta.env.DEV ? <SceneTriangleProbe /> : null}
+        <ResponsiveDistance minDistance={config.minDistance ?? 0} />
+        <CameraRig interactive={!interiorOpen} />
+        {/* {import.meta.env.DEV ? <CameraDebug /> : null} */}
+        {import.meta.env.DEV ? <TheatreCameraRig /> : null}
+        {/* {config.floor ? <ConcreteFloor floor={config.floor} /> : null}
+        {config.reflection ? <DockReflection reflection={config.reflection} /> : null} */}
+        <SceneEnvironment config={config} lightsOn={lightsOn} />
+        <Suspense fallback={null}>
+          {/* <GarageRoom lightsOn={lightsOn} /> */}
+          <GarageRoom lightsOn={false} />
+          <VehicleModel
+            config={config}
+            animationPlaying={animationPlaying}
+            showInterestPoints={!interiorOpen}
+            placing={placingActive}
+            drafts={drafts}
+            editingKey={editingKey}
+            onPlace={placePoint}
+            onRetarget={retargetPoint}
+            onHover={setHover}
+          />
+        </Suspense>
+        {config.bloomEnabled && config.glow > 0 ? <Bloom glow={config.glow} /> : null}
+        {/* {import.meta.env.DEV ? <ScenePerfProbe /> : null} */}
+        {/* {import.meta.env.DEV ? <SceneTriangleProbe /> : null} */}
+      </SheetProvider>
     </Canvas>
-    {import.meta.env.DEV ? <ScenePerfPanel /> : null}
-    {import.meta.env.DEV ? <SceneTriangleWindow /> : null}
-    {import.meta.env.DEV ? (
+    {/* {import.meta.env.DEV ? <ScenePerfPanel /> : null} */}
+    {/* {import.meta.env.DEV ? <SceneTriangleWindow /> : null} */}
+    {/* {import.meta.env.DEV ? (
       <Leva
         titleBar={{ title: "Сцена", drag: true, filter: true }}
       />
-    ) : null}
-    {import.meta.env.DEV ? (
+    ) : null} */}
+    {/* {import.meta.env.DEV ? (
       <PointPlacerPanel
         active={placingActive}
         label="Точки"
@@ -181,7 +195,7 @@ export function GarageScene({ config, interiorOpen, sceneScaled, animationPlayin
         onEditingChange={setEditingKey}
         onLoadCurrent={() => setDrafts(fromInterestPoints(config.interestPoints ?? []))}
       />
-    ) : null}
+    ) : null} */}
     </>
   );
 }

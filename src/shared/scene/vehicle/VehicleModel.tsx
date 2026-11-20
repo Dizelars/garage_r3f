@@ -1,7 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useAnimations, useGLTF } from "@react-three/drei";
-import { LoopRepeat, Mesh, MeshStandardMaterial, type AnimationClip, type Object3D } from "three";
+import { editable as e } from "@theatre/r3f";
+import { LoopRepeat, Mesh, MeshStandardMaterial, type AnimationClip, type Group, type Object3D } from "three";
 import type { SceneConfig } from "entities/model/types";
 import { InterestPoints } from "../points/InterestPoints";
 import { VehicleDebug } from "./VehicleDebug";
@@ -68,9 +69,6 @@ export function VehicleModel({
   const gltf = useGLTF(config.modelUrl, config.draco);
   const model = useMemo(() => {
     const object = gltf.scene.clone(true);
-    object.position.set(...config.modelPosition);
-    object.rotation.y = config.modelRotationY;
-    object.scale.setScalar(config.modelScale);
 
     object.traverse((child) => {
       if (!(child instanceof Mesh)) {
@@ -107,6 +105,7 @@ export function VehicleModel({
   const frames = useMemo(() => collectStrobeFrames(model), [model]);
   const frameIndex = useRef(0);
   const frameTime = useRef(0);
+  const vehicleRef = useRef<Group>(null);
 
   useEffect(() => {
     if (!config.animated) {
@@ -141,18 +140,26 @@ export function VehicleModel({
       {config.animated && gltf.animations.length > 0 ? (
         <ClipPlayer clips={gltf.animations} root={model} playing={animationPlaying} />
       ) : null}
-      <PointPlacer
-        object={model}
-        active={placing}
-        points={drafts}
-        editingKey={editingKey}
-        onPlace={onPlace}
-        onRetarget={onRetarget}
-        onHover={onHover}
+      <e.group
+        ref={vehicleRef}
+        theatreKey="vehicle"
+        position={config.modelPosition}
+        rotation-y={config.modelRotationY}
+        scale={config.modelScale}
       >
-        {points && points.length > 0 ? <InterestPoints points={points} occluder={model} /> : null}
-      </PointPlacer>
-      {import.meta.env.DEV ? <VehicleDebug object={model} config={config} /> : null}
+        <PointPlacer
+          object={model}
+          active={placing}
+          points={drafts}
+          editingKey={editingKey}
+          onPlace={onPlace}
+          onRetarget={onRetarget}
+          onHover={onHover}
+        >
+          {points && points.length > 0 ? <InterestPoints points={points} occluder={model} /> : null}
+        </PointPlacer>
+      </e.group>
+      {/* {import.meta.env.DEV ? <VehicleDebug getObject={() => vehicleRef.current} /> : null} */}
     </>
   );
 }

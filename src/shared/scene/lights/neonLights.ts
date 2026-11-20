@@ -15,6 +15,7 @@ import {
 import { RectAreaLightHelper } from "three/addons/helpers/RectAreaLightHelper.js";
 import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
 import { keepSource, neonPoses, neonSources, type NeonLightPose } from "./garageLights";
+import { attachHiddenRig } from "./rigUserData";
 
 const neonWidth = 0.3;
 const neonIntensity = 5;
@@ -259,7 +260,7 @@ export function attachNeonLights(root: Object3D): NeonRig[] {
       commit: () => {},
     };
     pick.forEach((object) => {
-      object.userData.rig = rig;
+      attachHiddenRig(object, rig);
     });
     rigs.push(rig);
   });

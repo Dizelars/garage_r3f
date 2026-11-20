@@ -1,6 +1,8 @@
 import { useRef, useSyncExternalStore } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PerfHeadless, usePerf } from "r3f-perf";
+
+type PerfState = Parameters<Parameters<typeof usePerf>[0]>[0];
 import { InstancedMesh, Mesh, type BufferGeometry, type Object3D, type WebGLRenderer } from "three";
 
 type PerfSnapshot = {
@@ -18,11 +20,7 @@ type PerfSnapshot = {
   circularId: number;
 };
 
-function readSnapshot(state: {
-  log: { fps?: number; cpu?: number; gpu?: number } | null;
-  gl?: { info: { render: { calls: number; triangles: number; lines: number; points: number }; memory: { geometries: number; textures: number }; programs?: unknown[] } };
-  chart: { data: { fps: number[] }; circularId: number };
-}): PerfSnapshot {
+function readSnapshot(state: PerfState): PerfSnapshot {
   const render = state.gl?.info.render;
   const memory = state.gl?.info.memory;
 

@@ -112,7 +112,7 @@ export const sceneConfigs: Record<string, SceneConfig> = {
     modelPosition: [0, 0, 0],
     modelRotationY: Math.PI,
     skyResolution: 32,
-    minDistance: 2,
+    // minDistance: 2,
     floor: floor(6, 12, [0.5, 0.5]),
     animated: false,
     // interestPoints: [

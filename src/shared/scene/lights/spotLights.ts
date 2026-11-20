@@ -11,6 +11,8 @@ import {
   Vector3,
 } from "three";
 import { keepSource, spotPoses, spotSources, type SpotLightPose } from "./garageLights";
+import { attachHiddenRig } from "./rigUserData";
+import "./helperClonePatch";
 import {
   spotAngle,
   spotCandela,
@@ -242,7 +244,7 @@ export function attachSpotLights(root: Object3D): SpotRig[] {
       commit: () => {},
     };
     pick.forEach((object) => {
-      object.userData.rig = rig;
+      attachHiddenRig(object, rig);
     });
     rigs.push(rig);
   });

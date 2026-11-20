@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { CameraControlsImpl, type CameraControls } from "@react-three/drei";
+import CameraControlsImpl from "camera-controls";
+import type { CameraControls } from "@react-three/drei";
 import { Vector3 } from "three";
 import type { CameraLock } from "entities/model/types";
 import { subscribeCameraFocus, type CameraEvent } from "./cameraFocus";

@@ -55,7 +55,7 @@ export type SceneConfig = {
   toneMappingExposure: number;
   bloomEnabled: boolean;
   glow: number;
-  minDistance: number;
+  minDistance?: number;
   floor: FloorConfig | null;
   reflection: ReflectionConfig | null;
   animated?: boolean;

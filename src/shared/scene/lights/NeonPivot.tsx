@@ -1,8 +1,9 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PivotControls } from "@react-three/drei";
-import { Matrix4, Vector3 } from "three";
+import { Matrix4, Vector3, type Group } from "three";
 import type { NeonRig } from "./neonLights";
+import { attachHiddenRig } from "./rigUserData";
 
 const unit = new Vector3(1, 1, 1);
 
@@ -10,7 +11,14 @@ export function NeonPivot({ rig }: { rig: NeonRig }) {
   const matrix = useMemo(() => new Matrix4(), []);
   const scale = useMemo(() => new Vector3(), []);
   const shown = useRef(false);
+  const pivotRef = useRef<Group>(null);
   const [open, setOpen] = useState(false);
+
+  useLayoutEffect(() => {
+    if (pivotRef.current) {
+      attachHiddenRig(pivotRef.current, rig);
+    }
+  }, [rig, open]);
 
   useLayoutEffect(() => {
     if (!open) {
@@ -38,6 +46,7 @@ export function NeonPivot({ rig }: { rig: NeonRig }) {
 
   return (
     <PivotControls
+      ref={pivotRef}
       matrix={matrix}
       autoTransform
       disableScaling
@@ -45,7 +54,7 @@ export function NeonPivot({ rig }: { rig: NeonRig }) {
       scale={100}
       lineWidth={3}
       depthTest={false}
-      userData={{ pivot: true, rig }}
+      userData={{ pivot: true }}
       onDragStart={() => {
         rig.dragging = true;
       }}

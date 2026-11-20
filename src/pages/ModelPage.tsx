@@ -165,8 +165,8 @@ export function ModelPage({ page }: ModelPageProps) {
   return (
     <>
       <SceneProgress />
-      <ModelHeader backHref={page.backHref} />
-      <TechSpec
+      {/* <ModelHeader backHref={page.backHref} /> */}
+      {/* <TechSpec
         title={page.title}
         missionHtml={page.missionHtml}
         outfit={page.outfit}
@@ -199,7 +199,7 @@ export function ModelPage({ page }: ModelPageProps) {
           hidden={chromeHidden}
           onClick={() => setAnimationPlaying((value) => !value)}
         />
-      ) : null}
+      ) : null} */}
       <LightButton
         enabled={lightsOn}
         hidden={chromeHidden}
@@ -212,9 +212,9 @@ export function ModelPage({ page }: ModelPageProps) {
         animationPlaying={animationPlaying && !interiorOpen}
         lightsOn={lightsOn}
       />
-      <div id="overlay" className={overlayActive ? "active" : undefined} />
-      <ArButton arSrc={page.arSrc} qrSrc={page.qrSrc} />
-      {page.panorama ? <Panorama tour={page.panorama} active={interiorOpen} /> : null}
+      {/* <div id="overlay" className={overlayActive ? "active" : undefined} /> */}
+      {/* <ArButton arSrc={page.arSrc} qrSrc={page.qrSrc} />
+      {page.panorama ? <Panorama tour={page.panorama} active={interiorOpen} /> : null} */}
     </>
   );
 }

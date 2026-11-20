@@ -252,7 +252,8 @@ export function LoaderField({ progress }: LoaderFieldProps) {
       gl.vertexAttribPointer(location, location === 3 ? 1 : 3, gl.FLOAT, false, 0, 0);
     });
     const trail = new Float32Array(12 * 3);
-    let trailCursor = 0;
+    let lastSlot = -1;
+    let lastWrite = 0;
     let previousMouseX = 0;
     let previousMouseY = 0;
     let hasMouse = false;
@@ -278,7 +279,7 @@ export function LoaderField({ progress }: LoaderFieldProps) {
       const deltaSeconds = Math.min(0.05, (now - previousFrame) / 1000);
       previousFrame = now;
       for (let index = 0; index < 12; index += 1) {
-        trail[index * 3 + 2] *= Math.exp(-deltaSeconds * 1.6);
+        trail[index * 3 + 2] = Math.max(0, trail[index * 3 + 2] - deltaSeconds / 1.4);
       }
       gl.uniform1f(timeLocation, nowSeconds);
       gl.uniform1f(progressLocation, Math.max(0, Math.min(1, progressRef.current / 100)));
@@ -301,19 +302,30 @@ export function LoaderField({ progress }: LoaderFieldProps) {
       const aspect = rect.width / rect.height;
       const x = ndcX * 2.6 * aspect;
       const y = ndcY * 2.6;
-      if (!hasMouse || Math.hypot(x - previousMouseX, y - previousMouseY) > 0.02) {
-        trail[trailCursor * 3] = x;
-        trail[trailCursor * 3 + 1] = y;
-        trail[trailCursor * 3 + 2] = 1;
-        trailCursor = (trailCursor + 1) % 12;
-        previousMouseX = x;
-        previousMouseY = y;
-        hasMouse = true;
-      } else {
-        const slot = (trailCursor + 11) % 12;
+      const now = performance.now();
+      const moved = !hasMouse || Math.hypot(x - previousMouseX, y - previousMouseY) > 0.02;
+      if (moved && now - lastWrite >= 60) {
+        // Новая точка идёт в самый затухший слот: старые точки
+        // доживают своё затухание, а не затираются мгновенно —
+        // иначе при уходе курсора с фигуры сила пропадает скачком.
+        let slot = 0;
+        for (let index = 1; index < 12; index += 1) {
+          if (trail[index * 3 + 2] < trail[slot * 3 + 2]) {
+            slot = index;
+          }
+        }
         trail[slot * 3] = x;
         trail[slot * 3 + 1] = y;
         trail[slot * 3 + 2] = 1;
+        lastSlot = slot;
+        lastWrite = now;
+        previousMouseX = x;
+        previousMouseY = y;
+        hasMouse = true;
+      } else if (lastSlot >= 0) {
+        trail[lastSlot * 3] = x;
+        trail[lastSlot * 3 + 1] = y;
+        trail[lastSlot * 3 + 2] = 1;
       }
     };
     window.addEventListener("resize", onResize);
